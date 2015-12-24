@@ -1,0 +1,28 @@
+sudo: false
+language: node_js
+node_js:
+  - '4.2'
+  - '4.1'
+  - '4.0'
+  - '0.12'
+matrix:
+  fast_finish: true
+os:
+  - linux
+cache:
+  directories:
+    - node_modules
+notifications:
+  email: false
+branches:
+  only:
+    - master
+  except:
+    - gh-pages
+before_script:
+  - npm dedupe
+  - npm prune
+script:
+  - npm run clean
+  - npm run cover
+after_script: .travis/after-all.sh

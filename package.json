@@ -1,0 +1,76 @@
+{
+  "name": "webpack-glob",
+  "main": "index.js",
+  "bin": {
+    "webpack-glob": "./bin/cli.js"
+  },
+  "scripts": {
+    "clean": "rm -rf ./coverage",
+    "lint": "eslint --cache ./",
+    "pretest": "npm run lint",
+    "test": "node ./jasmine.js",
+    "precover": "npm run lint",
+    "cover": "istanbul cover jasmine JASMINE_CONFIG_PATH=./jasmine.json",
+    "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
+    "docs": "gulp docs",
+    "postpublish": "publish-latest -a 'package.json README.md docs/API.md'",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+  },
+  "files": [
+    "index.js",
+    "lib/",
+    "bin/"
+  ],
+  "author": "Marat Dreizin <marat.dreizin@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mdreizin/webpack-glob.git"
+  },
+  "keywords": [
+    "webpack",
+    "glob",
+    "gaze",
+    "minimatch"
+  ],
+  "bugs": {
+    "url": "https://github.com/mdreizin/webpack-glob/issues"
+  },
+  "homepage": "https://github.com/mdreizin/webpack-glob",
+  "description": "webpack + glob = ❤️",
+  "dependencies": {
+    "bluebird": "^3.1.1",
+    "chalk": "^1.1.1",
+    "eazy-logger": "^2.1.2",
+    "gaze": "^0.5.2",
+    "glob": "^6.0.1",
+    "glob2base": "0.0.12",
+    "lodash": "^3.10.1",
+    "memory-fs": "^0.3.0",
+    "messageformat": "^0.2.2",
+    "pretty-hrtime": "^1.0.1",
+    "progress": "^1.1.8",
+    "tildify": "^1.1.2",
+    "webpack": "^1.12.9",
+    "webpack-config": "^3.0.0",
+    "worker-farm": "^1.3.1",
+    "yargs": "^3.31.0"
+  },
+  "devDependencies": {
+    "codeclimate-test-reporter": "^0.1.1",
+    "coding-style": "mdreizin/coding-style",
+    "eslint": "^1.10.3",
+    "fs-extra": "^0.26.3",
+    "gitdown": "^1.3.0",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-jsdoc-to-markdown": "^1.2.0",
+    "istanbul": "^0.4.1",
+    "jasmine": "^2.4.1",
+    "jasmine-spec-reporter": "^2.4.0",
+    "publish-latest": "^1.1.2",
+    "run-sequence": "^1.1.5",
+    "semantic-release": "^4.3.5",
+    "travis-after-all": "^1.4.4"
+  }
+}
