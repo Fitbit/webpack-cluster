@@ -52,7 +52,7 @@
     "progress": "^1.1.8",
     "tildify": "^1.1.2",
     "webpack": "^1.12.9",
-    "webpack-config": "^3.0.0",
+    "webpack-config": "^3.1.0",
     "worker-farm": "^1.3.1",
     "yargs": "^3.31.0"
   },
