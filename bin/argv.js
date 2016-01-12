@@ -89,4 +89,9 @@ var argv = yargs
     .version(VERSION, null, MESSAGES.version)
     .argv;
 
+/**
+ * @private
+ * @module webpack-glob/bin/argv
+ * @returns {Object<*,*>}
+ */
 module.exports = argv;
