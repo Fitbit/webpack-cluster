@@ -53,7 +53,17 @@ var WEBPACK_OMIT_OPTIONS = [].concat(LOCAL_OPTIONS, COMPILER_OPTIONS, SYSTEM_OPT
  */
 var COMPILER_PICK_OPTIONS = [].concat(COMPILER_OPTIONS);
 
-var compilerOptions = _.pick(argv, COMPILER_PICK_OPTIONS),
+var /**
+     * @private
+     * @constant
+     * @type {CompilerOptions}
+     */
+    compilerOptions = _.pick(argv, COMPILER_PICK_OPTIONS),
+    /**
+     * @private
+     * @constant
+     * @type {WebpackOptions}
+     */
     webpackOptions = _.omit(argv, WEBPACK_OMIT_OPTIONS);
 
 var adapter = new CompilerAdapter(compilerOptions, webpackOptions),
