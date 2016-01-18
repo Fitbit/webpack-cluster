@@ -1,0 +1,17 @@
+webpack-glob --config=**/webpack.config.js [options]
+
+Compiler:
+  --config    Specifies configuration files using `minimatch` pattern
+                                                             [string] [required]
+  --progress  Displays compilation progress           [boolean] [default: false]
+  --json      Saves `stats` object to JSON file       [boolean] [default: false]
+  --watch     Runs webpack compiler in `watch` mode   [boolean] [default: false]
+
+Webpack:
+  --profile  Captures timing information for each module
+                                                      [boolean] [default: false]
+  --[*]      Many configuration options are mapped from CLI automatically
+                                                                   [default: {}]
+
+Miscellaneous:
+  --version  Outputs the version number                                 [string]

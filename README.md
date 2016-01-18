@@ -3,4 +3,64 @@
 [webpack](https://github.com/webpack/webpack) + [glob](https://github.com/isaacs/node-glob) = :heart:
 =====================================================================================================
 
-:construction:
+<h2 id="documentation">Documentation</h2>
+
+For API docs please see the [documentation page](https://github.com/mdreizin/webpack-glob/blob/master/docs/API.md).
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="usage-cli">CLI</h3>
+
+```
+webpack-glob --config=**/webpack.config.js [options]
+
+Compiler:
+  --config    Specifies configuration files using `minimatch` pattern
+                                                             [string] [required]
+  --progress  Displays compilation progress           [boolean] [default: false]
+  --json      Saves `stats` object to JSON file       [boolean] [default: false]
+  --watch     Runs webpack compiler in `watch` mode   [boolean] [default: false]
+
+Webpack:
+  --profile  Captures timing information for each module
+                                                      [boolean] [default: false]
+  --[*]      Many configuration options are mapped from CLI automatically
+                                                                   [default: {}]
+
+Miscellaneous:
+  --version  Outputs the version number                                 [string]
+
+```
+
+<h3 id="usage-gulp-js">Gulp.js</h3>
+
+```javascript
+'use strict';
+
+var gulp = require('gulp'),
+    gutil = require('gulp-util'),
+    WebpackGlob = require('webpack-glob');
+
+var webpackOptions = {
+        output: {
+            path: './dist'
+        }
+    },
+    compilerOptions = {
+        progress: false,
+        json: false,
+        stats: false,
+        memoryFs: false
+    };
+
+gulp.task('webpack', [], function(callback) {
+    var webpack = new WebpackGlob(compilerOptions, webpackOptions);
+
+    webpack.run('./src/**/webpack.config.js').then(function() {
+        callback();
+    }).catch(function(err) {
+        callback(new gutil.PluginError('webpack', err));
+    });
+});
+
+```

@@ -3,4 +3,20 @@
 [webpack](https://github.com/webpack/webpack) + [glob](https://github.com/isaacs/node-glob) = :heart:
 =====================================================================================================
 
-:construction:
+## Documentation
+
+For API docs please see the [documentation page]({"gitdown": "gitinfo", "name": "url"}/blob/{"gitdown": "gitinfo", "name": "branch"}/docs/API.md).
+
+## Usage
+
+### CLI
+
+```
+{"gitdown": "include", "file": "docs/samples/cli.txt"}
+```
+
+### Gulp.js
+
+```javascript
+{"gitdown": "include", "file": "docs/samples/gulpfile.js"}
+```
