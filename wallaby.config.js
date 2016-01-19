@@ -1,13 +1,10 @@
 'use strict';
 
-var path = require('path');
-
-module.exports = function (wallaby) {
-    process.env.NODE_PATH += path.delimiter + path.join(wallaby.localProjectDir, 'node_modules');
-
+module.exports = function () {
     return {
         files: [
             'lib/*.js',
+            'test/helpers/**/*.js',
             'test/fixtures/**/*.js',
             'index.js',
             'package.json'
@@ -18,6 +15,9 @@ module.exports = function (wallaby) {
         testFramework: 'jasmine',
         env: {
             type: 'node'
+        },
+        bootstrap: function () {
+            require('./test/helpers/workerFarmMock');
         }
     };
 };
