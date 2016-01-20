@@ -35,7 +35,8 @@ var MESSAGES = {
     profile: 'Captures timing information for each module',
     watch: 'Runs webpack compiler in `watch` mode',
     webpack: 'Many configuration options are mapped from CLI automatically',
-    version: 'Outputs the version number'
+    version: 'Outputs the version number',
+    memoryFs: 'Compiles to memory'
 };
 
 /**
@@ -74,6 +75,12 @@ var argv = yargs
             group: GROUPS.compiler,
             'default': false,
             description: MESSAGES.watch,
+            'boolean': true
+        },
+        memoryFs: {
+            group: GROUPS.compiler,
+            'default': false,
+            description: MESSAGES.memoryFs,
             'boolean': true
         },
         '[*]': {

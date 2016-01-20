@@ -20,6 +20,7 @@ Compiler:
   --progress  Displays compilation progress           [boolean] [default: false]
   --json      Saves `stats` object to JSON file       [boolean] [default: false]
   --watch     Runs webpack compiler in `watch` mode   [boolean] [default: false]
+  --memoryFs  Compiles to memory                      [boolean] [default: false]
 
 Webpack:
   --profile  Captures timing information for each module
