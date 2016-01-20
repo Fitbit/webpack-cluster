@@ -131,7 +131,6 @@ Called when `webpack.config.js` file is compiled. Will be passed `err` and `stat
 | progress | <code>Boolean</code> | <code>false</code> | Displays compilation progress |
 | memoryFs | <code>Boolean</code> | <code>false</code> | Compiles to [memory](https://webpack.github.io/docs/node.js-api.html#compile-to-memory) |
 | json | <code>Boolean</code> | <code>false</code> | Saves `stats` object to JSON file |
-| profile | <code>Boolean</code> | <code>false</code> | Captures timing information for each module |
 | failOn | <code>[FailOnOptions](#FailOnOptions)</code> | <code>{}</code> | In case when `failOn` is `Boolean` then all nested `failOn.*` properties will be filled out with that value |
 
 <a name="WebpackOptions"></a>
