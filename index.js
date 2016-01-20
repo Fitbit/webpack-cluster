@@ -60,7 +60,6 @@ var CompilerAdapter = require('./lib/compilerAdapter');
  * @property {Boolean} [progress=false] - Displays compilation progress
  * @property {Boolean} [memoryFs=false] - Compiles to {@link https://webpack.github.io/docs/node.js-api.html#compile-to-memory memory}
  * @property {Boolean} [json=false] - Saves `stats` object to JSON file
- * @property {Boolean} [profile=false] - Captures timing information for each module
  * @property {FailOnOptions} [failOn={}] - In case when `failOn` is `Boolean` then all nested `failOn.*` properties will be filled out with that value
  */
 
