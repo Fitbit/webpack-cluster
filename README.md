@@ -44,12 +44,26 @@ var gulp = require('gulp'),
 var webpackOptions = {
         output: {
             path: './dist'
+        },
+        stats: {
+            colors: true,
+            hash: true,
+            timings: true,
+            chunks: false,
+            chunkModules: false,
+            modules: false,
+            children: true,
+            version: false,
+            cached: false,
+            cachedAssets: false,
+            reasons: false,
+            source: false,
+            errorDetails: false
         }
     },
     compilerOptions = {
         progress: false,
         json: false,
-        stats: false,
         memoryFs: false
     };
 
