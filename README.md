@@ -12,7 +12,7 @@ For API docs please see the [documentation page](https://github.com/mdreizin/web
 <h3 id="usage-cli">CLI</h3>
 
 ```
-webpack-glob --config=**/webpack.config.js [options]
+$ webpack-glob --config=./src/**/webpack.config.js [options]
 
 Compiler:
   --config    Specifies configuration files using `minimatch` pattern
