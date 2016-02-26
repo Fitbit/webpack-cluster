@@ -43,7 +43,7 @@ var CompilerAdapter = require('./lib/compilerAdapter');
 
 /**
  * @private
- * @typedef {Object} CompilationViolations
+ * @typedef {Object} FailOnResult
  * @property {String[]} fatalErrors
  * @property {String[]} errors
  * @property {String[]} warnings
