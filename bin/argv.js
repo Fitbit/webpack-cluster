@@ -89,11 +89,10 @@ var argv = yargs
             description: MESSAGES.webpack
         },
         version: {
-            group: GROUPS.miscellaneous,
-            string: true
+            group: GROUPS.miscellaneous
         }
     })
-    .version(VERSION, null, MESSAGES.version)
+    .version('version', MESSAGES.version, VERSION)
     .argv;
 
 /**
