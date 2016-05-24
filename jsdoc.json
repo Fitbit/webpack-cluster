@@ -1,0 +1,13 @@
+{
+  "source": {
+    "exclude": ["src/bin"]
+  },
+  "opts": {
+    "destination": "docs",
+    "recurse": true,
+    "readme": "README.md"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ]
+}

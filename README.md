@@ -40,7 +40,7 @@ Miscellaneous:
 
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
-    WebpackGlob = require('webpack-glob');
+    WebpackGlob = require(webpack-cluster);
 
 var webpackOptions = {
         output: {
