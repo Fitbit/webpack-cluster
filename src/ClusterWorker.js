@@ -9,7 +9,7 @@ import FORK_EVENTS from './ClusterForkEvents';
 
 class ClusterWorker {
     /**
-     * @param {CompilerStrategy} CompilerStrategy
+     * @param {function(new:CompilerStrategy,Object,Object)} CompilerStrategy
      * @returns {void}
      */
     static use(CompilerStrategy) {
