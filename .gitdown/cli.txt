@@ -1,4 +1,4 @@
-$ webpack-glob --config=**/webpack.config.js [options]
+$ webpack-cluster --config=**/webpack.config.js [options]
 
 Compiler:
   --config      Specifies configuration files using `minimatch` pattern

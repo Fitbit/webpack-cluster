@@ -1,4 +1,4 @@
-[![NPM version](http://img.shields.io/npm/v/webpack-glob.svg?style=flat-square)](https://www.npmjs.org/package/webpack-glob) [![Travis build status](http://img.shields.io/travis/mdreizin/webpack-glob/es6.svg?style=flat-square)](https://travis-ci.org/mdreizin/webpack-glob) [![AppVeyor build status](https://img.shields.io/appveyor/ci/mdreizin/webpack-glob/es6.svg?style=flat-square)](https://ci.appveyor.com/project/mdreizin/webpack-glob/branch/es6) [![Code Climate GPA](https://img.shields.io/codeclimate/github/github/mdreizin/webpack-glob.svg?style=flat-square)](https://codeclimate.com/github/mdreizin/webpack-glob) [![Code Climate Coverage](https://img.shields.io/codeclimate/coverage/github/github/mdreizin/webpack-glob.svg?style=flat-square)](https://codeclimate.com/github/mdreizin/webpack-glob) [![Dependency Status](https://img.shields.io/david/mdreizin/webpack-glob.svg?style=flat-square)](https://david-dm.org/mdreizin/webpack-glob) [![Development Dependency Status](https://img.shields.io/david/dev/mdreizin/webpack-glob.svg?style=flat-square)](https://david-dm.org/mdreizin/webpack-glob#info=devDependencies)
+[![NPM version](http://img.shields.io/npm/v/webpack-cluster.svg?style=flat-square)](https://www.npmjs.org/package/webpack-cluster) [![Travis build status](http://img.shields.io/travis/mdreizin/webpack-glob/es6.svg?style=flat-square)](https://travis-ci.org/mdreizin/webpack-glob) [![AppVeyor build status](https://img.shields.io/appveyor/ci/mdreizin/webpack-glob/es6.svg?style=flat-square)](https://ci.appveyor.com/project/mdreizin/webpack-glob/branch/es6) [![Code Climate GPA](https://img.shields.io/codeclimate/github/github/mdreizin/webpack-glob.svg?style=flat-square)](https://codeclimate.com/github/mdreizin/webpack-glob) [![Code Climate Coverage](https://img.shields.io/codeclimate/coverage/github/github/mdreizin/webpack-glob.svg?style=flat-square)](https://codeclimate.com/github/mdreizin/webpack-glob) [![Dependency Status](https://img.shields.io/david/mdreizin/webpack-glob.svg?style=flat-square)](https://david-dm.org/mdreizin/webpack-glob) [![Development Dependency Status](https://img.shields.io/david/dev/mdreizin/webpack-glob.svg?style=flat-square)](https://david-dm.org/mdreizin/webpack-glob#info=devDependencies)
 
 webpack-cluster
 ===============
@@ -10,7 +10,7 @@ Helps to make parallel webpack compilation easily
 <h3 id="usage-cli">CLI</h3>
 
 ```
-$ webpack-glob --config=**/webpack.config.js [options]
+$ webpack-cluster --config=**/webpack.config.js [options]
 
 Compiler:
   --config      Specifies configuration files using `minimatch` pattern
@@ -37,14 +37,14 @@ Miscellaneous:
 ```javascript
 import gulp from 'gulp';
 import gutil from 'gulp-util';
-import CompilerAdapter from 'webpack-glob';
+import WebpackCluster from 'webpack-cluster';
 
 const WEBPACK_OPTIONS = {
         output: {
             path: './dist'
         },
         stats: {
-            colors: true,   
+            colors: true,
             hash: true,
             timings: true,
             chunks: false,
@@ -64,16 +64,16 @@ const WEBPACK_OPTIONS = {
         json: false,
         memoryFs: false
     },
-    compilerAdapter = new CompilerAdapter(COMPILER_OPTIONS, WEBPACK_OPTIONS);
+    webpack = new WebpackCluster(COMPILER_OPTIONS, WEBPACK_OPTIONS);
 
 gulp.task('run', [], callback => {
-    compilerAdapter.run('./src/**/webpack.config.js').then(callback).catch(err => {
+    webpack.run('./src/**/webpack.config.js').then(callback).catch(err => {
         callback(new gutil.PluginError('webpack', err));
     });
 });
 
 gulp.task('watch', [], callback => {
-    compilerAdapter.watch('./src/**/webpack.config.js').then(callback).catch(err => {
+    webpack.watch('./src/**/webpack.config.js').then(callback).catch(err => {
         callback(new gutil.PluginError('webpack', err));
     });
 });

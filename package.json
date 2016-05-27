@@ -1,5 +1,5 @@
 {
-  "name": "webpack-glob",
+  "name": "webpack-cluster",
   "main": "dist/index.js",
   "bin": "dist/bin/index.js",
   "files": [
@@ -15,7 +15,7 @@
     "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
     "gitdown": "gitdown ./.gitdown/README.md --output-file ./README.md",
     "jsdoc": "jsdoc ./src -c ./jsdoc.json",
-    "gh-pages": "gh-pages -r https://${GH_TOKEN}@github.com/mdreizin/webpack-glob.git -d docs",
+    "gh-pages": "gh-pages -r https://${GH_TOKEN}@github.com/mdreizin/webpack-cluster.git -d docs",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "Marat Dreizin <marat.dreizin@gmail.com>",

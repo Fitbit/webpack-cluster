@@ -1,13 +1,13 @@
 import gulp from 'gulp';
 import gutil from 'gulp-util';
-import CompilerAdapter from 'webpack-glob';
+import WebpackCluster from 'webpack-cluster';
 
 const WEBPACK_OPTIONS = {
         output: {
             path: './dist'
         },
         stats: {
-            colors: true,   
+            colors: true,
             hash: true,
             timings: true,
             chunks: false,
@@ -27,16 +27,16 @@ const WEBPACK_OPTIONS = {
         json: false,
         memoryFs: false
     },
-    compilerAdapter = new CompilerAdapter(COMPILER_OPTIONS, WEBPACK_OPTIONS);
+    webpack = new WebpackCluster(COMPILER_OPTIONS, WEBPACK_OPTIONS);
 
 gulp.task('run', [], callback => {
-    compilerAdapter.run('./src/**/webpack.config.js').then(callback).catch(err => {
+    webpack.run('./src/**/webpack.config.js').then(callback).catch(err => {
         callback(new gutil.PluginError('webpack', err));
     });
 });
 
 gulp.task('watch', [], callback => {
-    compilerAdapter.watch('./src/**/webpack.config.js').then(callback).catch(err => {
+    webpack.watch('./src/**/webpack.config.js').then(callback).catch(err => {
         callback(new gutil.PluginError('webpack', err));
     });
 });
