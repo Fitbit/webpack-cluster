@@ -1,10 +1,10 @@
 [![NPM version](http://img.shields.io/npm/v/webpack-cluster.svg?style=flat-square)](https://www.npmjs.org/package/webpack-cluster)
-[![Travis build status](http://img.shields.io/travis/mdreizin/webpack-glob/master.svg?style=flat-square)](https://travis-ci.org/mdreizin/webpack-glob)
-[![AppVeyor build status](https://img.shields.io/appveyor/ci/mdreizin/webpack-glob/master.svg?style=flat-square)](https://ci.appveyor.com/project/mdreizin/webpack-glob/branch/master)
-[![Code Climate GPA](https://img.shields.io/codeclimate/github/github/mdreizin/webpack-glob.svg?style=flat-square)](https://codeclimate.com/github/mdreizin/webpack-glob)
-[![Code Climate Coverage](https://img.shields.io/codeclimate/coverage/github/github/mdreizin/webpack-glob.svg?style=flat-square)](https://codeclimate.com/github/mdreizin/webpack-glob)
-[![Dependency Status](https://img.shields.io/david/mdreizin/webpack-glob.svg?style=flat-square)](https://david-dm.org/mdreizin/webpack-glob)
-[![Development Dependency Status](https://img.shields.io/david/dev/mdreizin/webpack-glob.svg?style=flat-square)](https://david-dm.org/mdreizin/webpack-glob#info=devDependencies)
+[![Travis build status](http://img.shields.io/travis/mdreizin/webpack-cluster/master.svg?style=flat-square)](https://travis-ci.org/mdreizin/webpack-cluster)
+[![AppVeyor build status](https://img.shields.io/appveyor/ci/mdreizin/webpack-cluster/master.svg?style=flat-square)](https://ci.appveyor.com/project/mdreizin/webpack-cluster/branch/master)
+[![Code Climate GPA](https://img.shields.io/codeclimate/github/github/mdreizin/webpack-cluster.svg?style=flat-square)](https://codeclimate.com/github/mdreizin/webpack-cluster)
+[![Code Climate Coverage](https://img.shields.io/codeclimate/coverage/github/github/mdreizin/webpack-cluster.svg?style=flat-square)](https://codeclimate.com/github/mdreizin/webpack-cluster)
+[![Dependency Status](https://img.shields.io/david/mdreizin/webpack-cluster.svg?style=flat-square)](https://david-dm.org/mdreizin/webpack-cluster)
+[![Development Dependency Status](https://img.shields.io/david/dev/mdreizin/webpack-cluster.svg?style=flat-square)](https://david-dm.org/mdreizin/webpack-cluster#info=devDependencies)
 
 webpack-cluster
 ===============
