@@ -1,5 +1,6 @@
 {
   "name": "webpack-cluster",
+  "description": "Helps to compile webpack configs in parallel",
   "main": "dist/index.js",
   "bin": "dist/bin/index.js",
   "files": [
@@ -33,7 +34,6 @@
     "url": "https://github.com/mdreizin/webpack-glob/issues"
   },
   "homepage": "https://github.com/mdreizin/webpack-glob",
-  "description": "webpack + glob = ❤️",
   "dependencies": {
     "babel-runtime": "^6.6.1",
     "chalk": "^1.1.1",
