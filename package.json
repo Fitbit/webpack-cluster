@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",
-    "babel-eslint": "^5.0.0",
+    "babel-eslint": "^6.0.2",
     "babel-istanbul": "^0.7.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-builtin-extend": "^1.1.0",
