@@ -79,8 +79,20 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
     /**
      * @override
      */
-    closeCluster() {
-        return super.closeCluster().then(() => this.closeWatchers());
+    afterExecute() {
+        return super.afterExecute().then(() => {
+            let promises = [];
+
+            for (const watcher of this.watchers.values()) {
+                promises.push(new Promise(resolve => {
+                    watcher.on('end', resolve);
+                }));
+
+                watcher.close(true);
+            }
+
+            return Promise.all(promises);
+        });
     }
 
     /**
@@ -89,7 +101,7 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
      * @param {Function} callback
      * @returns {Promise}
      */
-    openWatcher(pattern, callback) {
+    watch(pattern, callback) {
         return new Promise((resolve, reject) => {
             gaze(pattern, (err, watcher) => {
                 this.watchers.set(pattern, watcher);
@@ -111,30 +123,12 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
 
     /**
      * @private
-     * @returns {Promise}
-     */
-    closeWatchers() {
-        let promises = [];
-
-        for (const watcher of this.watchers.values()) {
-            promises.push(new Promise(resolve => {
-                watcher.on('end', resolve);
-            }));
-
-            watcher.close(true);
-        }
-
-        return Promise.all(promises);
-    }
-
-    /**
-     * @private
      * @param {String} pattern
      * @param {Function} [callback]
      * @returns {Promise}
      */
     mainWatch(pattern, callback) {
-        return this.openWatcher(pattern, filename => {
+        return this.watch(pattern, filename => {
             const results = [];
 
             results.push(new CompilerStrategyResult(pattern, [ filename ]));
@@ -152,7 +146,7 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
     closestWatch(pattern, callback) {
         const cwd = glob2base(new Glob(pattern));
 
-        return this.openWatcher(join(cwd, '**/*.js'), filename => {
+        return this.watch(join(cwd, '**/*.js'), filename => {
             this.findAll(join(dirname(filename), basename(pattern))).then(results => this.compileAll(results, callback));
         });
     }
@@ -160,10 +154,10 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
     /**
      * @override
      */
-    compile(pattern, filename, callback) {
-        this.queue.set(filename, pattern);
+    compile(filename, pattern, callback) {
+        this.queue.set(filename, true);
 
-        return this.closeFork(filename).then(() => super.compile(pattern, filename, callback).then(stats => {
+        return this.closeFork(filename).then(() => super.compile(filename, pattern, callback).then(stats => {
             this.queue.delete(filename);
 
             return Promise.resolve(stats);
@@ -186,14 +180,14 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
     execute(patterns, callback) {
         this.emit(STRATEGY_EVENTS.watch, patterns);
 
-        return this.openCluster().then(() => {
+        return this.beforeExecute().then(() => {
             return Promise.all(patterns.map(pattern => {
                 return Promise.all([
                     this.mainWatch(pattern, callback),
                     this.closestWatch(pattern, callback)
                 ]);
             }));
-        }).catch(err => this.closeCluster().then(() => Promise.reject(err)));
+        }).catch(err => this.afterExecute().then(() => Promise.reject(err)));
     }
 }
 

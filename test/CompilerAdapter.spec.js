@@ -1,4 +1,3 @@
-import cluster from 'cluster';
 import {
     appendFileSync,
     exists
@@ -10,27 +9,31 @@ import {
 import CompilerAdapter from '../src/index';
 
 describe('CompilerAdapter', () => {
-    const closeCluster = () => {
-        return new Promise(resolve => {
-            cluster.disconnect(resolve);
-        });
-    };
+    let callbacks;
 
     afterEach(done => remove('./test/fixtures/tmp', done));
-    afterEach(done => closeCluster().then(done));
+
+    beforeEach(function() {
+        callbacks = {
+            done: (err, stats) => {
+                expect(err).toEqual(null);
+                expect(stats).toEqual(jasmine.any(Object));
+            }
+        };
+
+        spyOn(callbacks, 'done');
+    });
 
     describe('#run()', () => {
-        it('should compile successfully', done => {
+        it('should run successfully', done => {
             const compilerAdapter = new CompilerAdapter({
                 memoryFs: true,
                 silent: true
             });
 
-            compilerAdapter.run('./test/fixtures/webpack.!(3).config.js', (err, stats) => {
-                expect(err).toEqual(null);
-                expect(stats).toEqual(jasmine.any(Object));
-            }).then(stats => {
+            compilerAdapter.run('./test/fixtures/webpack.!(3).config.js', callbacks.done).then(stats => {
                 expect(stats).toEqual(jasmine.any(Map));
+                expect(callbacks.done.calls.count()).toEqual(3);
 
                 done();
             });
@@ -97,7 +100,7 @@ describe('CompilerAdapter', () => {
             }));
         };
 
-        it('should start watching successfully', done => {
+        it('should watch successfully', done => {
             const compilerAdapter = new CompilerAdapter({
                 memoryFs: true,
                 silent: true

@@ -1,11 +1,44 @@
 import {
-    isError,
-    get
+    get,
+    isError
 } from 'lodash';
+import CompilerStrategyProgress from './CompilerStrategyProgress';
 import CompilerStrategyError from './CompilerStrategyError';
 import CompilerStrategyStats from './CompilerStrategyStats';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
 import FORK_EVENTS from './ClusterForkEvents';
+
+/**
+ * @private
+ * @param {String} filename
+ * @param {Number} ratio
+ * @param {String} status
+ * @returns {void}
+ */
+const progress = (filename, ratio, status) => {
+    process.send({
+        type: FORK_EVENTS.progress,
+        data: new CompilerStrategyProgress(filename, ratio, status)
+    });
+};
+
+/**
+ * @private
+ * @param {String} filename
+ * @param {Object} stats
+ * @param {Error} err
+ * @returns {void}
+ */
+const done = (filename, stats, err) => {
+    if (isError(err)) {
+        err = CompilerStrategyError.fromError(err);
+    }
+
+    process.send({
+        type: FORK_EVENTS.stats,
+        data: new CompilerStrategyStats(filename, stats, err)
+    });
+};
 
 class ClusterWorker {
     /**
@@ -21,39 +54,14 @@ class ClusterWorker {
                     filename = get(data, 'filename'),
                     strategy = new CompilerStrategy(compilerOptions, webpackOptions);
 
-                strategy.on(STRATEGY_EVENTS.progress, (_, ratio, status) => {
-                    process.send({
-                        type: FORK_EVENTS.progress,
-                        data: {
-                            filename,
-                            ratio,
-                            status
-                        }
-                    });
-                });
+                strategy.on(STRATEGY_EVENTS.progress, progress);
 
                 strategy.execute([
                     filename
                 ], (err, stats) => {
-                    if (isError(err)) {
-                        err = new CompilerStrategyError(err);
-
-                        process.send({
-                            type: FORK_EVENTS.fail,
-                            data: {
-                                filename,
-                                err
-                            }
-                        });
-                    } else {
-                        process.send({
-                            type: FORK_EVENTS.done,
-                            data: {
-                                filename,
-                                stats: new CompilerStrategyStats(stats)
-                            }
-                        });
-                    }
+                    done(filename, stats, err);
+                }).catch(err => {
+                    done(filename, null, err);
                 });
             }
         });

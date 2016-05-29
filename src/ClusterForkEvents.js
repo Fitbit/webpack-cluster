@@ -2,10 +2,8 @@
  * @type {Object<String,String>}
  */
 export default {
+    message: 'message',
     compile: 'compile',
     progress: 'progress',
-    message: 'message',
-    done: 'done',
-    fail: 'fail',
-    shutdown: 'shutdown'
+    stats: 'stats'
 };

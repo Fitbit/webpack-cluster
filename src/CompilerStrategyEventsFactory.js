@@ -10,10 +10,9 @@ import SIMPLE_EVENTS from './CompilerStrategySimpleEvents';
  */
 const WATCH_IGNORED_EVENTS = [
     STRATEGY_EVENTS.time,
-    STRATEGY_EVENTS.failOn,
-    STRATEGY_EVENTS.fatalErrors,
-    STRATEGY_EVENTS.errors,
-    STRATEGY_EVENTS.warnings
+    STRATEGY_EVENTS.find,
+    STRATEGY_EVENTS.done,
+    STRATEGY_EVENTS.failOn
 ];
 
 /**
@@ -29,7 +28,7 @@ class CompilerStrategyEventsFactory {
 
         if (compilerOptions.silent === true) {
             events = DEFAULT_EVENTS;
-        } else if (process.stdout && process.stdout.isTTY === true) {
+        } else if (compilerOptions.progress === true && process.stdout && process.stdout.isTTY === true) {
             events = PRETTY_EVENTS;
         } else if (isCI) {
             events = SIMPLE_EVENTS;

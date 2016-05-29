@@ -4,15 +4,12 @@
 export default {
     run: 'run',
     watch: 'watch',
-    compile: 'compile',
+    find: 'find',
+    compilationStart: 'compilationStart',
+    compilationProgress: 'compilationProgress',
+    compilationDone: 'compilationDone',
+    compilationStats: 'compilationStats',
     done: 'done',
-    fail: 'fail',
     failOn: 'failOn',
-    progress: 'progress',
-    stats: 'stats',
-    fatalError: 'fatalError',
-    time: 'time',
-    fatalErrors: 'fatalErrors',
-    errors: 'errors',
-    warnings: 'warnings'
+    time: 'time'
 };

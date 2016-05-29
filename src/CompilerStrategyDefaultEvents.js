@@ -3,6 +3,7 @@ import {
     uniq,
     isObject
 } from 'lodash';
+import CompilerStrategyError from './CompilerStrategyError';
 import STRATEGY_MESSAGES from './CompilerStrategyMessages';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
 
@@ -25,16 +26,16 @@ export default {
             warnings = [];
 
         results.forEach(result => {
-            result.done.forEach((stats, filename) => {
-                if (stats.hasErrors) {
+            result.files.forEach(filename => {
+                const stats = result.stats.get(filename);
+
+                if (stats.hasFatalError) {
+                    fatalErrors.push(filename);
+                } else if (stats.hasErrors) {
                     errors.push(filename);
                 } else if (stats.hasWarnings) {
                     warnings.push(filename);
                 }
-            });
-
-            result.fail.forEach((err, filename) => {
-                fatalErrors.push(filename);
             });
         });
 
@@ -55,7 +56,7 @@ export default {
 
             allErrors = uniq(allErrors);
 
-            throw new Error(STRATEGY_MESSAGES.fatalError({
+            throw new CompilerStrategyError(STRATEGY_MESSAGES.fatalError({
                 FILES: allErrors,
                 SIZE: allErrors.length
             }));

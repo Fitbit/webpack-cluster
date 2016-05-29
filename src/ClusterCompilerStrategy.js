@@ -39,8 +39,8 @@ class ClusterCompilerStrategy extends CompilerStrategy {
 
         WORKERS.set(this, new Map());
 
-        process.on('SIGINT', () => this.closeCluster());
-        process.on('SIGTERM', () => this.closeCluster());
+        process.on('SIGINT', () => this.afterExecute());
+        process.on('SIGTERM', () => this.afterExecute());
     }
 
     /**
@@ -61,7 +61,7 @@ class ClusterCompilerStrategy extends CompilerStrategy {
      * @protected
      * @returns {Promise}
      */
-    openCluster() {
+    beforeExecute() {
         return new Promise(resolve => {
             if (!this.isConnected) {
                 cluster.setupMaster({
@@ -79,7 +79,7 @@ class ClusterCompilerStrategy extends CompilerStrategy {
      * @protected
      * @returns {Promise}
      */
-    closeCluster() {
+    afterExecute() {
         return new Promise(resolve => {
             if (this.isConnected) {
                 cluster.disconnect(resolve);

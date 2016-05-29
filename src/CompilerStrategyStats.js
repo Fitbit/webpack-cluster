@@ -2,10 +2,19 @@ import {
     result,
     get,
     isPlainObject,
+    isObject,
     isString,
-    isFunction
+    isFunction,
+    isError
 } from 'lodash';
+import CompilerStrategyError from './CompilerStrategyError';
 import STATS_OPTIONS from './StatsOptions';
+
+/**
+ * @private
+ * @type {WeakMap}
+ */
+const FILENAME = new WeakMap();
 
 /**
  * @private
@@ -14,15 +23,32 @@ import STATS_OPTIONS from './StatsOptions';
 const STATS = new WeakMap();
 
 /**
+ * @private
+ * @type {WeakMap}
+ */
+const FATAL_ERROR = new WeakMap();
+
+/**
  * @class
  */
 class CompilerStrategyStats {
     /**
      * @constructor
+     * @param {String} filename
      * @param {Object} stats
+     * @param {Error} fatalError
      */
-    constructor(stats = {}) {
+    constructor(filename, stats = null, fatalError = null) {
+        FILENAME.set(this, filename);
         STATS.set(this, stats);
+        FATAL_ERROR.set(this, fatalError);
+    }
+
+    /**
+     * @type {String}
+     */
+    get filename() {
+        return FILENAME.get(this);
     }
 
     /**
@@ -33,22 +59,36 @@ class CompilerStrategyStats {
     }
 
     /**
+     * @type {Error}
+     */
+    get fatalError() {
+        return FATAL_ERROR.get(this);
+    }
+
+    /**
+     * @type {Boolean}
+     */
+    get hasFatalError() {
+        return isError(this.fatalError);
+    }
+
+    /**
      * @type {Boolean}
      */
     get hasErrors() {
-        return result(this.stats, 'hasErrors');
+        return result(this.stats, 'hasErrors', false);
     }
 
     /**
      * @type {Boolean}
      */
     get hasWarnings() {
-        return result(this.stats, 'hasWarnings');
+        return result(this.stats, 'hasWarnings', false);
     }
 
     /**
      * @override
-     * @param {Object} [options]
+     * @param {Object} [options]s
      * @returns {String}
      */
     toString(options) {
@@ -58,10 +98,16 @@ class CompilerStrategyStats {
 
         let toString;
 
-        if (isFunction(this.stats.toString)) {
-            toString = this.stats.toString(options);
-        } else if (isString(this.stats.toString)) {
-            toString = this.stats.toString;
+        if (isObject(this.stats)) {
+            if (isFunction(this.stats.toString)) {
+                toString = this.stats.toString(options);
+            } else if (isString(this.stats.toString)) {
+                toString = this.stats.toString;
+            }
+        }
+
+        if (!isString(toString)) {
+            toString = '';
         }
 
         return toString;
@@ -72,10 +118,31 @@ class CompilerStrategyStats {
      */
     toJSON() {
         return {
-            hasErrors: this.hasErrors,
-            hasWarnings: this.hasWarnings,
-            toString: this.toString()
+            filename: this.filename,
+            fatalError: this.fatalError,
+            stats: {
+                hasErrors: this.hasErrors,
+                hasWarnings: this.hasWarnings,
+                toString: this.toString()
+            }
         };
+    }
+
+    /**
+     * @param {Object} obj
+     * @returns {CompilerStrategyStats}
+     */
+    static fromJSON(obj) {
+        const filename = get(obj, 'filename'),
+            stats = get(obj, 'stats');
+
+        let fatalError = get(obj, 'fatalError');
+
+        if (CompilerStrategyError.isError(fatalError)) {
+            fatalError = CompilerStrategyError.fromJSON(fatalError);
+        }
+
+        return new CompilerStrategyStats(filename, stats, fatalError);
     }
 }
 

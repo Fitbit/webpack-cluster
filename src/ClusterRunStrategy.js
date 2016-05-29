@@ -1,14 +1,12 @@
 import {
-    get,
-    uniq,
-    isError
+    get
 } from 'lodash';
 import {
     ConfigFinder
 } from 'webpack-config';
 import ConfigBuilder from './ConfigBuilder';
 import ClusterCompilerStrategy from './ClusterCompilerStrategy';
-import CompilerStrategyError from './CompilerStrategyError';
+import CompilerStrategyProgress from './CompilerStrategyProgress';
 import CompilerStrategyStats from './CompilerStrategyStats';
 import CompilerStrategyResult from './CompilerStrategyResult';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
@@ -62,68 +60,54 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
      * @returns {Promise<CompilerStrategyResult[]>}
      */
     findAll(...patterns) {
-        return Promise.all(patterns.map(pattern => this.find(pattern)));
+        return Promise.all(patterns.map(pattern => this.find(pattern))).then(results => {
+            this.emit(STRATEGY_EVENTS.find, results);
+
+            return Promise.resolve(results);
+        });
     }
 
     /**
      * @protected
-     * @param {String} pattern
      * @param {String} filename
+     * @param {String} pattern
      * @param {Function} callback
      * @returns {Promise<CompilerStrategyStats,Error>}
      */
-    compile(pattern, filename, callback) {
+    compile(filename, pattern, callback) {
+        this.emit(STRATEGY_EVENTS.compilationStart, filename);
+
         return this.createFork(filename).then(worker => {
-            this.emit(STRATEGY_EVENTS.compile, filename);
-
-            worker.send({
-                type: FORK_EVENTS.compile,
-                data: {
-                    filename,
-                    compilerOptions: this.compilerOptions,
-                    webpackOptions: this.webpackOptionsFor(pattern)
-                }
-            });
-
-            return new Promise((resolve, reject) => {
+            return new Promise(resolve => {
                 worker.on(FORK_EVENTS.message, message => {
                     const data = get(message, 'data', {});
 
                     switch (message.type) {
                         case FORK_EVENTS.progress: {
-                            const ratio = get(data, 'ratio', 0),
-                                status = get(data, 'status', '');
+                            const progress = CompilerStrategyProgress.fromJSON(data);
 
-                            this.emit(STRATEGY_EVENTS.progress, filename, ratio, status);
-
+                            this.emit(STRATEGY_EVENTS.compilationProgress, progress);
                             break;
                         }
 
-                        case FORK_EVENTS.done: {
-                            let stats = get(data, 'stats', {});
+                        case FORK_EVENTS.stats: {
+                            const stats = CompilerStrategyStats.fromJSON(data);
 
-                            stats = new CompilerStrategyStats(stats);
+                            this.emit(STRATEGY_EVENTS.compilationDone, stats);
 
-                            this.emit(STRATEGY_EVENTS.done, filename, stats);
-
-                            callback(null, stats);
+                            callback(stats.fatalError, stats.stats);
                             resolve(stats);
                             break;
                         }
+                    }
+                });
 
-                        case FORK_EVENTS.fail: {
-                            let err = get(data, 'err');
-
-                            if (CompilerStrategyError.isError(err)) {
-                                err = CompilerStrategyError.createError(err);
-                            }
-
-                            this.emit(STRATEGY_EVENTS.fail, filename, err);
-
-                            callback(err);
-                            reject(err);
-                            break;
-                        }
+                worker.send({
+                    type: FORK_EVENTS.compile,
+                    data: {
+                        filename,
+                        compilerOptions: this.compilerOptions,
+                        webpackOptions: this.webpackOptionsFor(pattern)
                     }
                 });
             });
@@ -138,73 +122,30 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
      */
     compileAll(results, callback) {
         return Promise.all(results.map(result => {
-            return this.throttle(result.files, filename => {
-                return this.compile(result.pattern, filename, callback).then(stats => {
-                    result.done.set(filename, stats);
+            return this.throttle(result.files, filename => this.compile(filename, result.pattern, callback).then(stats => {
+                result.stats.set(filename, stats);
 
-                    return Promise.resolve(stats);
-                }).catch(err => {
-                    if (isError(err)) {
-                        result.fail.set(filename, err);
-                    }
-
-                    return Promise.reject(err);
-                });
-            });
-        })).then(() => this.done(results).then(() => this.failOn(results))).catch(err => Promise.reject(err));
+                return Promise.resolve(stats);
+            }));
+        })).then(() => this.done(results), () => this.done(results));
     }
 
     /**
-     * @protected
+     * @private
      * @param {CompilerStrategyResult[]} results
      * @returns {Promise}
      */
     done(results) {
-        let fatalErrors = [],
-            errors = [],
-            warnings = [];
-
         results.forEach(result => {
             result.files.forEach(filename => {
-                if (result.done.has(filename)) {
-                    this.emit(STRATEGY_EVENTS.stats, filename, result.done.get(filename));
-                }
+                const stats = result.stats.get(filename);
 
-                if (result.fail.has(filename)) {
-                    this.emit(STRATEGY_EVENTS.fatalError, filename, result.fail.get(filename));
-                }
-            });
-
-            result.done.forEach((stats, filename) => {
-                if (stats.hasErrors) {
-                    errors.push(filename);
-                } else if (stats.hasWarnings) {
-                    warnings.push(filename);
-                }
-            });
-
-            result.fail.forEach((err, filename) => {
-                fatalErrors.push(filename);
+                this.emit(STRATEGY_EVENTS.compilationStats, stats);
             });
         });
 
-        fatalErrors = uniq(fatalErrors);
-        errors = uniq(errors);
-        warnings = uniq(warnings);
+        this.emit(STRATEGY_EVENTS.done, results);
 
-        this.emit(STRATEGY_EVENTS.fatalErrors, fatalErrors);
-        this.emit(STRATEGY_EVENTS.errors, errors);
-        this.emit(STRATEGY_EVENTS.warnings, warnings);
-
-        return Promise.resolve(results);
-    }
-
-    /**
-     * @protected
-     * @param {CompilerStrategyResult[]} results
-     * @returns {Promise}
-     */
-    failOn(results) {
         try {
             this.emit(STRATEGY_EVENTS.failOn, this.failOnOptions, results);
 
@@ -220,11 +161,11 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
     execute(patterns, callback) {
         this.emit(STRATEGY_EVENTS.run, patterns);
 
-        return this.openCluster().then(() => {
+        return this.beforeExecute().then(() => {
             return this.findAll(...patterns)
                 .then(results => this.compileAll(results, callback));
-        }).then(stats => this.closeCluster().then(() => Promise.resolve(stats)))
-            .catch(err => this.closeCluster().then(() => Promise.reject(err)));
+        }).then(results => this.afterExecute().then(() => Promise.resolve(results)))
+            .catch(err => this.afterExecute().then(() => Promise.reject(err)));
     }
 }
 

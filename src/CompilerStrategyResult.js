@@ -14,13 +14,7 @@ const FILES = new WeakMap();
  * @private
  * @type {WeakMap}
  */
-const FAIL = new WeakMap();
-
-/**
- * @private
- * @type {WeakMap}
- */
-const DONE = new WeakMap();
+const STATS = new WeakMap();
 
 /**
  * @class
@@ -36,8 +30,7 @@ class CompilerStrategyResult extends Map {
 
         PATTERN.set(this, pattern);
         FILES.set(this, files);
-        DONE.set(this, new Map());
-        FAIL.set(this, new Map());
+        STATS.set(this, new Map());
     }
 
     /**
@@ -60,16 +53,8 @@ class CompilerStrategyResult extends Map {
      * @readonly
      * @type {Map<String,CompilerStrategyStats>}
      */
-    get done() {
-        return DONE.get(this);
-    }
-
-    /**
-     * @readonly
-     * @type {Map<String,Error>}
-     */
-    get fail() {
-        return FAIL.get(this);
+    get stats() {
+        return STATS.get(this);
     }
 }
 

@@ -1,6 +1,8 @@
 import {
     mapValues,
-    result
+    result,
+    wrap,
+    trim
 } from 'lodash';
 import chalk from 'chalk';
 import {
@@ -32,29 +34,47 @@ const mf = new MessageFormat(LOCALE, null, {
             v = [v];
         }
 
-        return v.map(userPath).map(x => p === 'colors' ? chalk.magenta(x) : x).join(', ');
+        const values = v.map(userPath).map(x => p === 'colors' ? chalk.magenta(x) : x);
+
+        let value = '';
+
+        if (values.length > 1) {
+            value = `[${values.join(', ')}]`;
+        } else if (values.length === 1) {
+            value = values[0];
+        }
+
+        return value;
     },
 
-    stack: v => result(v, 'stack', '')
+    stack: v => chalk.red(result(v, 'stack', ''))
 });
 
 /**
  * @private
- * @param {Object<String,String>} messages
+ * @param {Object<String,String>} value
  * @returns {Object<String,Function>}
  */
-const compile = messages => mapValues(messages, message => mf.compile(message));
+const compile = value => mapValues(value, message => wrap(mf.compile(message), (fn, options) => trim(fn(options))));
 
 /**
  * @private
  * @type {Object<String,String>}
  */
 const MESSAGES = {
-    run: 'Compiling webpack configs [{PATTERNS,path,colors}]',
-    watch: 'Watching webpack configs [{PATTERNS,path,colors}]',
+    run: 'Processing webpack configs {PATTERNS,path,colors}',
+    watch: 'Watching webpack configs {PATTERNS,path,colors}',
+    files: `Compiling {SIZE, plural,
+        =0 {zero}
+        one {one}
+        other {#}
+    } webpack {SIZE, plural,
+        =0 {configs}
+        one {config}
+        other {configs}
+     } {FILES,path,colors}`,
     compile: 'Compiling webpack config {FILE,path,colors}',
-    compileWithStatus: 'Compiling webpack config {FILE,path,colors} {STATUS}',
-    statsWithStatus: 'Stats for webpack config {FILE,path,colors} {STATUS}',
+    stats: 'Stats for webpack config {FILE,path,colors} {STATUS} {ERROR,stack}',
     fatalError: `Cannot compile {SIZE, plural,
         =0 {zero}
         one {one}
@@ -63,9 +83,8 @@ const MESSAGES = {
         =0 {configs}
         one {config}
         other {configs}
-     } [{FILES,path}]`,
-    fatalErrorWithStack: 'Cannot compile webpack config {FILE,path,colors} due to {ERROR,stack}',
-    fatalErrorWithStatus: 'Cannot compile webpack config {FILE,path,colors} {STATUS}',
+     } {FILES,path}`,
+    error: '{ERROR,stack}',
     fatalErrors: `{SIZE, plural,
         =0 {Zero}
         one {One}
@@ -78,7 +97,7 @@ const MESSAGES = {
         =0 {have}
         one {has}
         other {have}
-    } fatal error [{FILES,path,colors}]`,
+    } fatal errors {FILES,path,colors}`,
     errors: `{SIZE, plural,
         =0 {Zero}
         one {One}
@@ -91,7 +110,7 @@ const MESSAGES = {
         =0 {have}
         one {has}
         other {have}
-    } errors [{FILES,path,colors}]`,
+    } errors {FILES,path,colors}`,
     warnings: `{SIZE, plural,
         =0 {Zero}
         one {One}
@@ -104,7 +123,7 @@ const MESSAGES = {
         =0 {have}
         one {has}
         other {have}
-    } warnings [{FILES,path,colors}]`,
+    } warnings {FILES,path,colors}`,
     time: 'Finished in {TIME}'
 };
 

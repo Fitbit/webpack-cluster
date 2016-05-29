@@ -21,14 +21,12 @@ const WRAPPER_KEY = '$CompilerStrategyError$';
 class CompilerStrategyError extends Error {
     /**
      * @constructor
-     * @param {Error} err
+     * @param {String} message
+     * @param {String} [fileName]
+     * @param {Number} [lineNumber]
      */
-    constructor(err) {
-        super(err.message, err.fileName, err.lineNumber);
-
-        this.type = err.constructor.name;
-        this.stack = err.stack;
-        this[WRAPPER_KEY] = true;
+    constructor(message, fileName, lineNumber) {
+        super(message, fileName, lineNumber);
     }
 
     /**
@@ -54,7 +52,7 @@ class CompilerStrategyError extends Error {
      * @param {Object} obj
      * @returns {Error}
      */
-    static createError(obj) {
+    static fromJSON(obj) {
         let err,
             message = obj.message;
 
@@ -102,6 +100,20 @@ class CompilerStrategyError extends Error {
         delete err[WRAPPER_KEY];
 
         return err;
+    }
+
+    /**
+     * @param {Error} err
+     * @returns {CompilerStrategyError}
+     */
+    static fromError(err) {
+        const wrapper = new CompilerStrategyError(err.message, err.fileName, err.lineNumber);
+
+        wrapper.type = err.constructor.name;
+        wrapper.stack = err.stack;
+        wrapper[WRAPPER_KEY] = true;
+
+        return wrapper;
     }
 
     /**

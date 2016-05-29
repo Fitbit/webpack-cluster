@@ -4,7 +4,6 @@ import {
 } from 'lodash';
 import STRATEGY_MESSAGES from './CompilerStrategyMessages';
 import STATUS_PREFIXES from './CompilerStatusPrefixes';
-import STATUS_LABELS from './CompilerStatusLabels';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
 import PRETTY_STRATEGY_EVENTS from './CompilerStrategyPrettyEvents';
 
@@ -39,38 +38,19 @@ export default Object.assign({}, PRETTY_STRATEGY_EVENTS, {
      * @param {String} filename
      * @returns {void}
      */
-    [STRATEGY_EVENTS.compile]: filename => {
+    [STRATEGY_EVENTS.compilationStart]: filename => {
         console.log(`${STATUS_PREFIXES.info} ${STRATEGY_MESSAGES.compile({
             FILE: filename
-        })} ${STATUS_LABELS.pending}`);
+        })}`);
     },
 
     /**
      * @private
-     * @param {String} filename
-     * @param {CompilerStrategyStats} stats
-     * @returns {void}
      */
-    [STRATEGY_EVENTS.done]: noop,
+    [STRATEGY_EVENTS.compilationDone]: noop,
 
     /**
      * @private
-     * @param {String} filename
-     * @returns {void}
      */
-    [STRATEGY_EVENTS.fail]: filename => {
-        console.log(`${STATUS_PREFIXES.info} %s`, STRATEGY_MESSAGES.fatalErrorWithStatus({
-            FILE: filename,
-            STATUS: STATUS_LABELS.fail
-        }));
-    },
-
-    /**
-     * @private
-     * @param {String} filename
-     * @param {Number} ratio
-     * @param {String} status
-     * @returns {void}
-     */
-    [STRATEGY_EVENTS.progress]: noop
+    [STRATEGY_EVENTS.compilationProgress]: noop
 });
