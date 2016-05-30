@@ -2,6 +2,7 @@ export default wallaby => {
     return {
         files: [
             'src/**/*.js',
+            'test/helpers/**/*.js',
             'test/fixtures/**/*.js'
         ],
         tests: [
@@ -15,6 +16,9 @@ export default wallaby => {
             '**/*.js': wallaby.compilers.babel({
                 babelrc: true
             })
+        },
+        bootstrap: () => {
+            require('./test/helpers/clusterMock');
         }
     };
 };

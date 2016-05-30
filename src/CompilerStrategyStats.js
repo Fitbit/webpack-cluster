@@ -133,16 +133,20 @@ class CompilerStrategyStats {
      * @returns {CompilerStrategyStats}
      */
     static fromJSON(obj) {
-        const filename = get(obj, 'filename'),
-            stats = get(obj, 'stats');
+        if (obj instanceof CompilerStrategyStats) {
+            return obj;
+        } else {
+            const filename = get(obj, 'filename'),
+                stats = get(obj, 'stats');
 
-        let fatalError = get(obj, 'fatalError');
+            let fatalError = get(obj, 'fatalError');
 
-        if (CompilerStrategyError.isError(fatalError)) {
-            fatalError = CompilerStrategyError.fromJSON(fatalError);
+            if (CompilerStrategyError.isError(fatalError)) {
+                fatalError = CompilerStrategyError.fromJSON(fatalError);
+            }
+
+            return new CompilerStrategyStats(filename, stats, fatalError);
         }
-
-        return new CompilerStrategyStats(filename, stats, fatalError);
     }
 }
 

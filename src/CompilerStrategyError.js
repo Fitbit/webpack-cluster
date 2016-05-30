@@ -1,5 +1,6 @@
 import {
-    isObject
+    isObject,
+    isError
 } from 'lodash';
 
 /**
@@ -53,53 +54,57 @@ class CompilerStrategyError extends Error {
      * @returns {Error}
      */
     static fromJSON(obj) {
-        let err,
-            message = obj.message;
+        if (isError(obj)) {
+            return obj;
+        } else {
+            let err,
+                message = obj.message;
 
-        switch (obj.type) {
-            case 'TypeError':
-                err = new TypeError(message);
-                break;
+            switch (obj.type) {
+                case 'TypeError':
+                    err = new TypeError(message);
+                    break;
 
-            case 'RangeError':
-                err = new RangeError(message);
-                break;
+                case 'RangeError':
+                    err = new RangeError(message);
+                    break;
 
-            case 'EvalError':
-                err = new EvalError(message);
-                break;
+                case 'EvalError':
+                    err = new EvalError(message);
+                    break;
 
-            case 'ReferenceError':
-                err = new ReferenceError(message);
-                break;
+                case 'ReferenceError':
+                    err = new ReferenceError(message);
+                    break;
 
-            case 'SyntaxError':
-                err = new SyntaxError(message);
-                break;
+                case 'SyntaxError':
+                    err = new SyntaxError(message);
+                    break;
 
-            case 'URIError':
-                err = new URIError(message);
-                break;
+                case 'URIError':
+                    err = new URIError(message);
+                    break;
 
-            default:
-                err = new Error(message);
+                default:
+                    err = new Error(message);
+            }
+
+            SYSTEM_PROPERTIES.forEach(key => {
+                if (obj[key]) {
+                    err[key] = obj[key];
+                }
+            });
+
+            Object.keys(obj).forEach(key => {
+                if (!err[key]) {
+                    err[key] = obj[key];
+                }
+            });
+
+            delete err[WRAPPER_KEY];
+
+            return err;
         }
-
-        SYSTEM_PROPERTIES.forEach(key => {
-            if (obj[key]) {
-                err[key] = obj[key];
-            }
-        });
-
-        Object.keys(obj).forEach(key => {
-            if (!err[key]) {
-                err[key] = obj[key];
-            }
-        });
-
-        delete err[WRAPPER_KEY];
-
-        return err;
     }
 
     /**

@@ -40,7 +40,6 @@ class ClusterCompilerStrategy extends CompilerStrategy {
         WORKERS.set(this, new Map());
 
         process.on('SIGINT', () => this.afterExecute());
-        process.on('SIGTERM', () => this.afterExecute());
     }
 
     /**

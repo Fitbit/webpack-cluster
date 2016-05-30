@@ -90,11 +90,15 @@ class CompilerStrategyProgress {
      * @returns {CompilerStrategyProgress}
      */
     static fromJSON(obj) {
-        const filename = get(obj, 'filename'),
-            ratio = get(obj, 'ratio', 0),
-            status = get(obj, 'status', '');
+        if (obj instanceof CompilerStrategyProgress) {
+            return obj;
+        } else {
+            const filename = get(obj, 'filename'),
+                ratio = get(obj, 'ratio', 0),
+                status = get(obj, 'status', '');
 
-        return new CompilerStrategyProgress(filename, ratio, status);
+            return new CompilerStrategyProgress(filename, ratio, status);
+        }
     }
 }
 
