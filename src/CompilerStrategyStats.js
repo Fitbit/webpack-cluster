@@ -20,7 +20,7 @@ const FILENAME = new WeakMap();
  * @private
  * @type {WeakMap}
  */
-const STATS = new WeakMap();
+const RAW = new WeakMap();
 
 /**
  * @private
@@ -35,12 +35,12 @@ class CompilerStrategyStats {
     /**
      * @constructor
      * @param {String} filename
-     * @param {Object} stats
+     * @param {Object} raw
      * @param {Error} fatalError
      */
-    constructor(filename, stats = null, fatalError = null) {
+    constructor(filename, raw = null, fatalError = null) {
         FILENAME.set(this, filename);
-        STATS.set(this, stats);
+        RAW.set(this, raw);
         FATAL_ERROR.set(this, fatalError);
     }
 
@@ -54,8 +54,8 @@ class CompilerStrategyStats {
     /**
      * @type {Object}
      */
-    get stats() {
-        return STATS.get(this);
+    get raw() {
+        return RAW.get(this);
     }
 
     /**
@@ -76,14 +76,14 @@ class CompilerStrategyStats {
      * @type {Boolean}
      */
     get hasErrors() {
-        return result(this.stats, 'hasErrors', false);
+        return result(this.raw, 'hasErrors', false);
     }
 
     /**
      * @type {Boolean}
      */
     get hasWarnings() {
-        return result(this.stats, 'hasWarnings', false);
+        return result(this.raw, 'hasWarnings', false);
     }
 
     /**
@@ -93,16 +93,16 @@ class CompilerStrategyStats {
      */
     toString(options) {
         if (!isPlainObject(options)) {
-            options = get(this.stats, 'compilation.options.stats', STATS_OPTIONS);
+            options = get(this.raw, 'compilation.options.stats', STATS_OPTIONS);
         }
 
         let toString;
 
-        if (isObject(this.stats)) {
-            if (isFunction(this.stats.toString)) {
-                toString = this.stats.toString(options);
-            } else if (isString(this.stats.toString)) {
-                toString = this.stats.toString;
+        if (isObject(this.raw)) {
+            if (isFunction(this.raw.toString)) {
+                toString = this.raw.toString(options);
+            } else if (isString(this.raw.toString)) {
+                toString = this.raw.toString;
             }
         }
 

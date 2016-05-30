@@ -95,7 +95,7 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
 
                             this.emit(STRATEGY_EVENTS.compilationDone, stats);
 
-                            callback(stats.fatalError, stats.stats);
+                            callback(stats.fatalError, stats.raw);
                             resolve(stats);
                             break;
                         }
