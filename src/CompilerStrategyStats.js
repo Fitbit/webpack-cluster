@@ -38,7 +38,7 @@ class CompilerStrategyStats {
      * @param {Object} raw
      * @param {Error} fatalError
      */
-    constructor(filename, raw = null, fatalError = null) {
+    constructor(filename, raw, fatalError) {
         FILENAME.set(this, filename);
         RAW.set(this, raw);
         FATAL_ERROR.set(this, fatalError);

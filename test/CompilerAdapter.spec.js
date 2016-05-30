@@ -13,25 +13,38 @@ describe('CompilerAdapter', () => {
 
     afterEach(done => remove('./test/fixtures/tmp', done));
 
-    beforeEach(function() {
-        callbacks = {
-            done: (err, stats) => {
-                expect(err).toEqual(null);
-                expect(stats).toEqual(jasmine.any(Object));
-            }
-        };
-
-        spyOn(callbacks, 'done');
-    });
-
     describe('#run()', () => {
+        beforeEach(() => {
+            callbacks = {
+                done: (err, stats) => {
+                    expect(err).toEqual(null);
+                    expect(stats).toEqual(jasmine.any(Object));
+                }
+            };
+
+            spyOn(callbacks, 'done');
+            spyOn(console, 'log').and.callFake(() => {});
+            spyOn(process.stdout, 'write').and.callFake(() => {});
+        });
+
         it('should run successfully', done => {
             const compilerAdapter = new CompilerAdapter({
                 memoryFs: true,
                 silent: true
             });
 
-            compilerAdapter.run('./test/fixtures/webpack.!(3).config.js', callbacks.done).then(stats => {
+            compilerAdapter.run('./test/fixtures/webpack.!(3|4).config.js', callbacks.done).then(stats => {
+                expect(stats).toEqual(jasmine.any(Map));
+                expect(callbacks.done.calls.count()).toEqual(3);
+
+                done();
+            });
+        });
+
+        it('should run successfully with default options', done => {
+            const compilerAdapter = new CompilerAdapter();
+
+            compilerAdapter.run('./test/fixtures/webpack.!(3|4).config.js', callbacks.done).then(stats => {
                 expect(stats).toEqual(jasmine.any(Map));
                 expect(callbacks.done.calls.count()).toEqual(3);
 
@@ -47,6 +60,20 @@ describe('CompilerAdapter', () => {
             });
 
             compilerAdapter.run('./test/fixtures/webpack.3.config.js').catch(err => {
+                expect(err).toEqual(jasmine.any(Error));
+
+                done();
+            });
+        });
+
+        it('should throw fatal `Error`', done => {
+            const compilerAdapter = new CompilerAdapter({
+                memoryFs: true,
+                failOn: false,
+                silent: true
+            });
+
+            compilerAdapter.run('./test/fixtures/webpack.4.config.js').catch(err => {
                 expect(err).toEqual(jasmine.any(Error));
 
                 done();
@@ -86,6 +113,35 @@ describe('CompilerAdapter', () => {
 
                     done();
                 });
+            });
+        });
+
+        it('should write some output to `console.log()` or `process.stdout.write()`', done => {
+            const compilerAdapter = new CompilerAdapter({
+                memoryFs: true,
+                progress: true
+            });
+
+            compilerAdapter.run('./test/fixtures/webpack.!(3|4).config.js').then(() => {
+                expect(console.log.calls.allArgs().length).toBeGreaterThan(0);
+                expect(process.stdout.write.calls.allArgs().length >= 0).toBeTruthy();
+
+                done();
+            });
+        });
+
+        it('should not write any output to `console.log()` or `process.stdout.write()` when `silent` is `true`', done => {
+            const compilerAdapter = new CompilerAdapter({
+                memoryFs: true,
+                progress: false,
+                silent: true
+            });
+
+            compilerAdapter.run('./test/fixtures/webpack.!(3|4).config.js').then(() => {
+                expect(console.log.calls.allArgs().length).toEqual(0);
+                expect(process.stdout.write.calls.allArgs().length).toEqual(0);
+
+                done();
             });
         });
     });
