@@ -17,6 +17,9 @@ export default wallaby => {
                 babelrc: true
             })
         },
+        workers: {
+            recycle: true
+        },
         bootstrap: () => {
             require('./test/helpers/clusterMock');
         }
