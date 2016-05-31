@@ -1,8 +1,8 @@
-'use strict';
+import {
+    join
+} from 'path';
 
-var path = require('path');
-
-module.exports = {
+export default {
     entry: {
         test: 'index.js'
     },
@@ -13,6 +13,6 @@ module.exports = {
         ]
     },
     output: {
-        path: path.join(__dirname, 'tmp', '3')
+        path: join(__dirname, 'tmp', '3')
     }
 };

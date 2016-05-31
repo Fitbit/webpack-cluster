@@ -1,14 +1,13 @@
 sudo: false
 language: node_js
 node_js:
-  - '4.2'
-  - '4.1'
-  - '4.0'
-  - '0.12'
+  - 5
+  - 4
 matrix:
   fast_finish: true
 os:
   - linux
+  - osx
 cache:
   directories:
     - node_modules
@@ -19,10 +18,14 @@ branches:
     - master
   except:
     - gh-pages
+before_install:
+  - git config --global user.name "$COMMIT_AUTHOR_NAME"
+  - git config --global user.email "$COMMIT_AUTHOR_EMAIL"
 before_script:
-  - npm dedupe
   - npm prune
 script:
   - npm run clean
+  - npm run eslint
   - npm run cover
-after_script: .travis/after-all.sh
+after_script:
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && .travis/after-all.sh || false'

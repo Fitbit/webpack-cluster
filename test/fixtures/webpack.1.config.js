@@ -1,10 +1,10 @@
-'use strict';
+import {
+    join
+} from 'path';
 
-var path = require('path');
-
-module.exports = {
+export default {
     filename: __filename,
     output: {
-        path: path.join(__dirname, 'tmp', '1')
+        path: join(__dirname, 'tmp', '1')
     }
 };

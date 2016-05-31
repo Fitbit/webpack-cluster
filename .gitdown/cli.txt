@@ -1,0 +1,19 @@
+$ webpack-cluster --config=**/webpack.config.js [options]
+
+Compiler:
+  --config      Specifies configuration files using `minimatch` pattern
+                                                             [string] [required]
+  --progress    Displays compilation progress                          [boolean]
+  --json        Saves `stats` object to JSON file                      [boolean]
+  --silent      Suppress all output                                    [boolean]
+  --watch       Runs webpack compiler in `watch` mode                  [boolean]
+  --memoryFs    Compiles to memory                                     [boolean]
+  --maxWorkers  Number of concurrent workers
+                                 [number] [default: require('os').cpus().length]
+
+Webpack:
+  --profile  Captures timing information for each module               [boolean]
+  --[*]      Many configuration options are mapped from CLI automatically
+
+Miscellaneous:
+  --version  Outputs the version number                                [boolean]
