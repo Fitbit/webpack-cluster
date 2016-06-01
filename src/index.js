@@ -38,7 +38,7 @@ import CompilerAdapter from './CompilerAdapter';
  */
 
 /**
- * @module webpack-glob
+ * @module webpack-cluster
  */
 
 /**
