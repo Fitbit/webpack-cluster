@@ -24,10 +24,7 @@ const TASKS = new Map();
 const OBSERVATORY_PREFIX = '';
 
 observatory.settings({
-    prefix: OBSERVATORY_PREFIX,
-    write: () => {
-        process.stdout.write(...Array.from(arguments));
-    }
+    prefix: OBSERVATORY_PREFIX
 });
 
 /**
