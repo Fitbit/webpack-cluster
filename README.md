@@ -15,6 +15,8 @@ Helps to make parallel webpack compilation easily
 
 <h3 id="usage-cli">CLI</h3>
 
+![](https://raw.github.com/mdreizin/webpack-cluster/master/.gitdown/cli.gif)
+
 ```
 $ webpack-cluster --config=**/webpack.config.js [options]
 

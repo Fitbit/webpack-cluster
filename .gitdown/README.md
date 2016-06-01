@@ -15,6 +15,8 @@ Helps to make parallel webpack compilation easily
 
 ### CLI
 
+![](https://raw.github.com/{"gitdown": "gitinfo", "name": "username"}/{"gitdown": "gitinfo", "name": "name"}/{"gitdown": "gitinfo", "name": "branch"}/.gitdown/cli.gif)
+
 ```
 {"gitdown": "include", "file": "cli.txt"}
 ```
