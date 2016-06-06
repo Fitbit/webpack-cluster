@@ -13,28 +13,6 @@ import PRETTY_STRATEGY_EVENTS from './CompilerStrategyPrettyEvents';
 export default Object.assign({}, PRETTY_STRATEGY_EVENTS, {
     /**
      * @private
-     * @param {String[]} patterns
-     * @returns {void}
-     */
-    [STRATEGY_EVENTS.run]: (patterns = []) => {
-        console.log(`${STATUS_PREFIXES.info} %s`, STRATEGY_MESSAGES.run({
-            PATTERNS: patterns
-        }));
-    },
-
-    /**
-     * @private
-     * @param {String} patterns
-     * @returns {void}
-     */
-    [STRATEGY_EVENTS.watch]: (patterns = []) => {
-        console.log(`${STATUS_PREFIXES.info} %s`, STRATEGY_MESSAGES.watch({
-            PATTERNS: patterns
-        }));
-    },
-
-    /**
-     * @private
      * @param {String} filename
      * @returns {void}
      */
