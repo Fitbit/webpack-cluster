@@ -146,7 +146,7 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
     closestWatch(pattern, callback) {
         const cwd = glob2base(new Glob(pattern));
 
-        return this.watch(join(cwd, '**/*.js'), filename => {
+        return this.watch(join(cwd, '**/*.*'), filename => {
             this.findAll(join(dirname(filename), basename(pattern))).then(results => this.compileAll(results, callback));
         });
     }
