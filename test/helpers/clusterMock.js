@@ -79,6 +79,8 @@ class ClusterMock extends EventEmitter {
 const clusterMock = new ClusterMock(),
     processOn = process.on;
 
+process.setMaxListeners(11);
+
 process.send = message => {
     const worker = clusterMock.workers[message.data.filename];
 
