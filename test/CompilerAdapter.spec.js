@@ -175,7 +175,7 @@ describe('CompilerAdapter', () => {
             let lastWatchers;
 
             copy('./test/fixtures/webpack.1.config.js', './test/fixtures/tmp/webpack.1.config.js', () => {
-                compilerAdapter.watch('./test/fixtures/tmp/webpack.1.config.js', (err, stats) => {
+                compilerAdapter.watch('./test/fixtures/tmp/webpack.*.config.js', (err, stats) => {
                     expect(err).toEqual(null);
                     expect(stats).toEqual(jasmine.any(Object));
 
@@ -198,7 +198,7 @@ describe('CompilerAdapter', () => {
 
             copy('./test/fixtures/sub', './test/fixtures/tmp/sub', () => {
                 copy('./test/fixtures/webpack.1.config.js', './test/fixtures/tmp/webpack.1.config.js', () => {
-                    compilerAdapter.watch('./test/fixtures/tmp/webpack.1.config.js', (err, stats) => {
+                    compilerAdapter.watch('./test/fixtures/tmp/webpack.*.config.js', (err, stats) => {
                         expect(err).toEqual(null);
                         expect(stats).toEqual(jasmine.any(Object));
 
@@ -206,7 +206,7 @@ describe('CompilerAdapter', () => {
                     }).then(watchers => {
                         lastWatchers = watchers;
 
-                        appendFileSync('./test/fixtures/tmp/webpack.1.config.js', `<!--Modified at ${new Date()}-->\n`);
+                        appendFileSync('./test/fixtures/tmp/sub/sub/index.html', `<!--Modified at ${new Date()}-->\n`);
                     });
                 });
             });

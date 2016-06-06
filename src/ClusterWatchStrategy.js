@@ -3,6 +3,7 @@ import {
 } from 'lodash';
 import {
     join,
+    resolve as resolvePath,
     dirname,
     basename
 } from 'path';
@@ -14,6 +15,7 @@ import {
 } from 'webpack-config';
 import glob2base from 'glob2base';
 import gaze from 'gaze';
+import minimatch from 'minimatch';
 import ClusterRunStrategy from './ClusterRunStrategy';
 import CompilerStrategyResult from './CompilerStrategyResult';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
@@ -147,7 +149,9 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
         const cwd = glob2base(new Glob(pattern));
 
         return this.watch(join(cwd, '**/*.*'), filename => {
-            this.findAll(join(dirname(filename), basename(pattern))).then(results => this.compileAll(results, callback));
+            if (!minimatch(filename, pattern)) {
+                this.findAll(join(dirname(filename), basename(pattern))).then(results => this.compileAll(results, callback));
+            }
         });
     }
 
@@ -181,7 +185,7 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
         this.emit(STRATEGY_EVENTS.watch, patterns);
 
         return this.beforeExecute().then(() => {
-            return Promise.all(patterns.map(pattern => {
+            return Promise.all(patterns.map(x => resolvePath(x)).map(pattern => {
                 return Promise.all([
                     this.mainWatch(pattern, callback),
                     this.closestWatch(pattern, callback)

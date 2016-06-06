@@ -3,7 +3,8 @@ export default wallaby => {
         files: [
             'src/**/*.js',
             'test/helpers/**/*.js',
-            'test/fixtures/**/*.js'
+            'test/fixtures/**/*.js',
+            'test/fixtures/**/*.html'
         ],
         tests: [
             'test/**/*.spec.js'
