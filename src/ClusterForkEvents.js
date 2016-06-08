@@ -5,5 +5,7 @@ export default {
     message: 'message',
     compile: 'compile',
     progress: 'progress',
-    stats: 'stats'
+    stats: 'stats',
+    online: 'online',
+    disconnect: 'disconnect'
 };

@@ -87,7 +87,7 @@ describe('CompilerAdapter', () => {
                 output: {
                     path: './test/fixtures/tmp/custom'
                 },
-                resolve: {
+                resolveCluster: {
                     base: './test/fixtures/tmp'
                 }
             });

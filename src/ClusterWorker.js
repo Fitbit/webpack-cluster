@@ -7,6 +7,7 @@ import CompilerStrategyError from './CompilerStrategyError';
 import CompilerStrategyStats from './CompilerStrategyStats';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
 import FORK_EVENTS from './ClusterForkEvents';
+import FORK_PROPERTIES from './ClusterForkProperties';
 
 /**
  * @private
@@ -17,8 +18,8 @@ import FORK_EVENTS from './ClusterForkEvents';
  */
 const progress = (filename, ratio, status) => {
     process.send({
-        type: FORK_EVENTS.progress,
-        data: new CompilerStrategyProgress(filename, ratio, status)
+        [FORK_PROPERTIES.type]: FORK_EVENTS.progress,
+        [FORK_PROPERTIES.data]: new CompilerStrategyProgress(filename, ratio, status)
     });
 };
 
@@ -35,8 +36,8 @@ const done = (filename, stats, err) => {
     }
 
     process.send({
-        type: FORK_EVENTS.stats,
-        data: new CompilerStrategyStats(filename, stats, err)
+        [FORK_PROPERTIES.type]: FORK_EVENTS.stats,
+        [FORK_PROPERTIES.data]: new CompilerStrategyStats(filename, stats, err)
     });
 };
 
@@ -48,10 +49,10 @@ class ClusterWorker {
     static use(CompilerStrategy) {
         process.on(FORK_EVENTS.message, message => {
             if (message.type === FORK_EVENTS.compile) {
-                const data = get(message, 'data', {}),
-                    compilerOptions = get(data, 'compilerOptions', {}),
-                    webpackOptions = get(data, 'webpackOptions', {}),
-                    filename = get(data, 'filename'),
+                const data = get(message, FORK_PROPERTIES.data, {}),
+                    compilerOptions = get(data, FORK_PROPERTIES.compilerOptions, {}),
+                    webpackOptions = get(data, FORK_PROPERTIES.webpackOptions, {}),
+                    filename = get(data, FORK_PROPERTIES.filename),
                     strategy = new CompilerStrategy(compilerOptions, webpackOptions);
 
                 strategy.on(STRATEGY_EVENTS.progress, progress);

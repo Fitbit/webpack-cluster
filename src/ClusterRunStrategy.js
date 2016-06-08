@@ -11,6 +11,7 @@ import CompilerStrategyStats from './CompilerStrategyStats';
 import CompilerStrategyResult from './CompilerStrategyResult';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
 import FORK_EVENTS from './ClusterForkEvents';
+import FORK_PROPERTIES from './ClusterForkProperties';
 
 /**
  * @private
@@ -80,9 +81,9 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
         return this.createFork(filename).then(worker => {
             return new Promise(resolve => {
                 worker.on(FORK_EVENTS.message, message => {
-                    const data = get(message, 'data', {});
+                    const data = get(message, FORK_PROPERTIES.data, {});
 
-                    switch (message.type) {
+                    switch (message[FORK_PROPERTIES.type]) {
                         case FORK_EVENTS.progress: {
                             const progress = CompilerStrategyProgress.fromJSON(data);
 
@@ -103,11 +104,11 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
                 });
 
                 worker.send({
-                    type: FORK_EVENTS.compile,
-                    data: {
-                        filename,
-                        compilerOptions: this.compilerOptions,
-                        webpackOptions: this.webpackOptionsFor(pattern)
+                    [FORK_PROPERTIES.type]: FORK_EVENTS.compile,
+                    [FORK_PROPERTIES.data]: {
+                        [FORK_PROPERTIES.filename]: filename,
+                        [FORK_PROPERTIES.compilerOptions]: this.compilerOptions,
+                        [FORK_PROPERTIES.webpackOptions]: this.webpackOptionsFor(pattern)
                     }
                 });
             });

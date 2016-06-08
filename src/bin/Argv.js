@@ -4,6 +4,9 @@ import {
 } from 'os';
 import GROUPS from './Groups';
 import MESSAGES from './Messages';
+import COMPILER_PROPERTIES from './CompilerProperties';
+import LOCAL_PROPERTIES from './LocalProperties';
+import SYSTEM_PROPERTIES from './SystemProperties';
 import pkg from '../../package.json';
 
 /**
@@ -17,7 +20,7 @@ const VERSION = pkg.version || 'DEV';
 export default yargs
     .usage(`${pkg.name} --config=**/webpack.config.js [options]`)
     .options({
-        config: {
+        [LOCAL_PROPERTIES.config]: {
             group: GROUPS.compiler,
             required: true,
             string: true,
@@ -25,50 +28,45 @@ export default yargs
             nargs: 1,
             array: true
         },
-        progress: {
+        [COMPILER_PROPERTIES.progress]: {
             group: GROUPS.compiler,
             description: MESSAGES.progress,
             'boolean': true
         },
-        json: {
+        [COMPILER_PROPERTIES.json]: {
             group: GROUPS.compiler,
             description: MESSAGES.json,
             'boolean': true
         },
-        profile: {
-            group: GROUPS.webpack,
-            description: MESSAGES.profile,
-            'boolean': true
-        },
-        silent: {
+        [COMPILER_PROPERTIES.silent]: {
             group: GROUPS.compiler,
             description: MESSAGES.silent,
             'boolean': true
         },
-        watch: {
+        [COMPILER_PROPERTIES.watch]: {
             group: GROUPS.compiler,
             description: MESSAGES.watch,
             'boolean': true
         },
-        memoryFs: {
+        [COMPILER_PROPERTIES.memoryFs]: {
             group: GROUPS.compiler,
             description: MESSAGES.memoryFs,
             'boolean': true
         },
-        maxWorkers: {
+        [COMPILER_PROPERTIES.maxWorkers]: {
             group: GROUPS.compiler,
             description: MESSAGES.maxWorkers,
             number: true,
             defaultDescription: 'require(\'os\').cpus().length',
             'default': cpus().length
         },
-        '[*]': {
+        [SYSTEM_PROPERTIES.rest]: {
             group: GROUPS.webpack,
             description: MESSAGES.webpack
         },
-        version: {
+        [SYSTEM_PROPERTIES.version]: {
             group: GROUPS.miscellaneous
         }
     })
-    .version('version', MESSAGES.version, VERSION)
+    .version(SYSTEM_PROPERTIES.version, MESSAGES.version, VERSION)
     .argv;

@@ -8,6 +8,7 @@ import {
 } from 'chalk';
 import STATS_OPTIONS from './StatsOptions';
 import CONFIG_HOOKS from './ConfigHooks';
+import WEBPACK_PROPERTIES from './CompilerWebpackProperties';
 
 /**
  * @private
@@ -87,7 +88,7 @@ class ConfigBuilder {
      */
     stats(stats = STATS_OPTIONS) {
         return this.defaults({
-            stats: stats
+            [WEBPACK_PROPERTIES.stats]: stats
         });
     }
 
@@ -97,7 +98,7 @@ class ConfigBuilder {
      */
     colors(colors = SUPPORTS_COLOR) {
         return this.merge({
-            stats: {
+            [WEBPACK_PROPERTIES.stats]: {
                 colors: colors
             }
         });
@@ -109,7 +110,7 @@ class ConfigBuilder {
      */
     pattern(pattern) {
         return this.merge({
-            resolve: {
+            [WEBPACK_PROPERTIES.resolveCluster]: {
                 pattern: pattern
             }
         });

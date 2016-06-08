@@ -11,6 +11,7 @@ import {
     Glob
 } from 'glob';
 import glob2base from 'glob2base';
+import WEBPACK_PROPERTIES from './CompilerWebpackProperties';
 
 /**
  * @private
@@ -32,8 +33,8 @@ export default {
      * @returns {String}
      */
     'output.path': (key, current, previous) => {
-        let base = getOrDefault('resolve.base', current, previous),
-            pattern = getOrDefault('resolve.pattern', current, previous),
+        let base = getOrDefault(`${WEBPACK_PROPERTIES.resolveCluster}.base`, current, previous),
+            pattern = getOrDefault(`${WEBPACK_PROPERTIES.resolveCluster}.pattern`, current, previous),
             currentPath = get(current, key),
             previousPath = get(previous, key);
 

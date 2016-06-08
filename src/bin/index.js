@@ -4,22 +4,26 @@ import {
     omit
 } from 'lodash';
 import ARGV from './Argv';
-import SYSTEM_OPTIONS from './SystemOptions';
-import LOCAL_OPTIONS from './LocalOptions';
-import COMPILER_OPTIONS from './CompilerOptions';
+import SYSTEM_PROPERTIES from './SystemProperties';
+import LOCAL_PROPERTIES from './LocalProperties';
+import COMPILER_PROPERTIES from './CompilerProperties';
 import CompilerAdapter from '../index';
 
-const compilerOptions = pick(ARGV, COMPILER_OPTIONS),
-    webpackOptions = omit(ARGV, [...LOCAL_OPTIONS, ...COMPILER_OPTIONS, ...SYSTEM_OPTIONS]),
+const compilerOptions = pick(ARGV, Object.values(COMPILER_PROPERTIES)),
+    webpackOptions = omit(ARGV, [
+        ...Object.values(LOCAL_PROPERTIES),
+        ...Object.values(COMPILER_PROPERTIES),
+        ...Object.values(SYSTEM_PROPERTIES)
+    ]),
     adapter = new CompilerAdapter(compilerOptions, webpackOptions);
 
 let exitCode = 0,
     promise;
 
-if (ARGV.watch) {
-    promise = adapter.watch(ARGV.config);
+if (ARGV[COMPILER_PROPERTIES.watch]) {
+    promise = adapter.watch(ARGV[LOCAL_PROPERTIES.config]);
 } else {
-    promise = adapter.run(ARGV.config);
+    promise = adapter.run(ARGV[LOCAL_PROPERTIES.config]);
 }
 
 promise.catch(() => {

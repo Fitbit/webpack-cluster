@@ -7,6 +7,8 @@ import {
 import throat from 'throat';
 import cluster from 'cluster';
 import CompilerStrategy from './CompilerStrategy';
+import FORK_EVENTS from './ClusterForkEvents';
+import COMPILER_PROPERTIES from './CompilerProperties';
 
 /**
  * @private
@@ -33,9 +35,9 @@ class ClusterCompilerStrategy extends CompilerStrategy {
     constructor(compilerOptions = {}, webpackOptions = {}) {
         super(compilerOptions, webpackOptions);
 
-        this.maxWorkers = get(compilerOptions, 'maxWorkers', DEFAULT_MAX_WORKERS);
+        this.maxWorkers = get(compilerOptions, COMPILER_PROPERTIES.maxWorkers, DEFAULT_MAX_WORKERS);
         this.isConnected = false;
-        this.failOnOptions = get(compilerOptions, 'failOn', {});
+        this.failOnOptions = get(compilerOptions, COMPILER_PROPERTIES.failOn, {});
 
         WORKERS.set(this, new Map());
 
@@ -100,7 +102,7 @@ class ClusterCompilerStrategy extends CompilerStrategy {
             if (!this.workers.has(filename)) {
                 const worker = cluster.fork();
 
-                worker.once('online', () => {
+                worker.once(FORK_EVENTS.online, () => {
                     this.workers.set(filename, worker);
 
                     resolve(worker);
@@ -121,7 +123,7 @@ class ClusterCompilerStrategy extends CompilerStrategy {
             if (this.workers.has(filename) && this.isConnected) {
                 const worker = this.workers.get(filename);
 
-                worker.once('disconnect', () => {
+                worker.once(FORK_EVENTS.disconnect, () => {
                     this.workers.delete(filename);
 
                     resolve();

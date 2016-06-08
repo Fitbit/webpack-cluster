@@ -9,6 +9,7 @@ import {
 } from 'lodash';
 import CompilerStrategyError from './CompilerStrategyError';
 import STATS_OPTIONS from './StatsOptions';
+import WEBPACK_PROPERTIES from './CompilerWebpackProperties';
 
 /**
  * @private
@@ -27,6 +28,19 @@ const RAW = new WeakMap();
  * @type {WeakMap}
  */
 const FATAL_ERROR = new WeakMap();
+
+/**
+ * @private
+ * @type {Object<String,String>}
+ */
+const STATS_PROPERTIES = {
+    filename: 'filename',
+    fatalError: 'fatalError',
+    hasErrors: 'hasErrors',
+    hasWarnings: 'hasWarnings',
+    toString: 'toString',
+    statsOptions: `compilation.options.${WEBPACK_PROPERTIES.stats}`
+};
 
 /**
  * @class
@@ -76,14 +90,14 @@ class CompilerStrategyStats {
      * @type {Boolean}
      */
     get hasErrors() {
-        return result(this.raw, 'hasErrors', false);
+        return result(this.raw, STATS_PROPERTIES.hasErrors, false);
     }
 
     /**
      * @type {Boolean}
      */
     get hasWarnings() {
-        return result(this.raw, 'hasWarnings', false);
+        return result(this.raw, STATS_PROPERTIES.hasWarnings, false);
     }
 
     /**
@@ -93,7 +107,7 @@ class CompilerStrategyStats {
      */
     toString(options) {
         if (!isPlainObject(options)) {
-            options = get(this.raw, 'compilation.options.stats', STATS_OPTIONS);
+            options = get(this.raw, STATS_PROPERTIES.statsOptions, STATS_OPTIONS);
         }
 
         let toString;
@@ -101,8 +115,8 @@ class CompilerStrategyStats {
         if (isObject(this.raw)) {
             if (isFunction(this.raw.toString)) {
                 toString = this.raw.toString(options);
-            } else if (isString(this.raw.toString)) {
-                toString = this.raw.toString;
+            } else if (isString(this.raw[STATS_PROPERTIES.toString])) {
+                toString = this.raw[STATS_PROPERTIES.toString];
             }
         }
 
@@ -118,12 +132,12 @@ class CompilerStrategyStats {
      */
     toJSON() {
         return {
-            filename: this.filename,
-            fatalError: this.fatalError,
-            stats: {
-                hasErrors: this.hasErrors,
-                hasWarnings: this.hasWarnings,
-                toString: this.toString()
+            [STATS_PROPERTIES.filename]: this.filename,
+            [STATS_PROPERTIES.fatalError]: this.fatalError,
+            [WEBPACK_PROPERTIES.stats]: {
+                [STATS_PROPERTIES.hasErrors]: this.hasErrors,
+                [STATS_PROPERTIES.hasWarnings]: this.hasWarnings,
+                [STATS_PROPERTIES.toString]: this.toString()
             }
         };
     }
@@ -136,10 +150,10 @@ class CompilerStrategyStats {
         if (obj instanceof CompilerStrategyStats) {
             return obj;
         } else {
-            const filename = get(obj, 'filename'),
-                stats = get(obj, 'stats');
+            const filename = get(obj, STATS_PROPERTIES.filename),
+                stats = get(obj, WEBPACK_PROPERTIES.stats);
 
-            let fatalError = get(obj, 'fatalError');
+            let fatalError = get(obj, STATS_PROPERTIES.fatalError);
 
             if (CompilerStrategyError.isError(fatalError)) {
                 fatalError = CompilerStrategyError.fromJSON(fatalError);

@@ -4,6 +4,7 @@ import {
 import EventEmitter from 'events';
 import CompilerFactory from './CompilerFactory';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
+import WEBPACK_PROPERTIES from './CompilerWebpackProperties';
 
 /**
  * @private
@@ -30,7 +31,7 @@ class CompilerStrategy extends EventEmitter {
     constructor(compilerOptions = {}, webpackOptions = {}) {
         super();
 
-        compilerOptions.progressCallback = (filename, ratio, status) => this.progress(filename, ratio, status);
+        webpackOptions[WEBPACK_PROPERTIES.progressCallback] = (filename, ratio, status) => this.progress(filename, ratio, status);
 
         COMPILER_OPTIONS.set(this, compilerOptions);
         WEBPACK_OPTIONS.set(this, webpackOptions);

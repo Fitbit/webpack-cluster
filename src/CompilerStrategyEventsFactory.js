@@ -3,6 +3,7 @@ import STRATEGY_EVENTS from './CompilerStrategyEvents';
 import DEFAULT_EVENTS from './CompilerStrategyDefaultEvents';
 import PRETTY_EVENTS from './CompilerStrategyPrettyEvents';
 import SIMPLE_EVENTS from './CompilerStrategySimpleEvents';
+import COMPILER_PROPERTIES from './CompilerProperties';
 
 /**
  * @private
@@ -26,9 +27,9 @@ class CompilerStrategyEventsFactory {
     static createEvents(compilerOptions = {}) {
         let events;
 
-        if (compilerOptions.silent === true) {
+        if (compilerOptions[COMPILER_PROPERTIES.silent] === true) {
             events = DEFAULT_EVENTS;
-        } else if (compilerOptions.progress === true && process.stdout && process.stdout.isTTY === true) {
+        } else if (compilerOptions[COMPILER_PROPERTIES.progress] === true && process.stdout && process.stdout.isTTY === true) {
             events = PRETTY_EVENTS;
         } else if (isCI) {
             events = SIMPLE_EVENTS;
@@ -36,7 +37,7 @@ class CompilerStrategyEventsFactory {
             events = SIMPLE_EVENTS;
         }
 
-        if (compilerOptions.watch === true) {
+        if (compilerOptions[COMPILER_PROPERTIES.watch] === true) {
             WATCH_IGNORED_EVENTS.forEach(value => {
                 delete events[value];
             });

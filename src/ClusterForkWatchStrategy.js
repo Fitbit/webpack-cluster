@@ -3,6 +3,7 @@ import {
     isError
 } from 'lodash';
 import ClusterForkRunStrategy from './ClusterForkRunStrategy';
+import WEBPACK_PROPERTIES from './CompilerWebpackProperties';
 
 /**
  * @class
@@ -15,7 +16,7 @@ class ClusterForkWatchStrategy extends ClusterForkRunStrategy {
     execute(patterns, callback) {
         return this.loadConfig(patterns[0]).then(config => {
             return this.createCompiler(this.compilerOptions, this.webpackOptionsFor(config)).then(compiler => {
-                const watchOptions = get(config, 'watchOptions') || get(this.compilerOptions, 'watchOptions') || {};
+                const watchOptions = get(config, WEBPACK_PROPERTIES.watchOptions) || get(this.compilerOptions, WEBPACK_PROPERTIES.watchOptions) || {};
 
                 return new Promise((resolve, reject) => {
                     compiler.watch(watchOptions, (err, stats) => {

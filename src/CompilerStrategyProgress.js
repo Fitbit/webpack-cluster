@@ -21,6 +21,16 @@ const RATIO = new WeakMap();
 const STATUS = new WeakMap();
 
 /**
+ * @private
+ * @type {Object<String,String>}
+ */
+const PROGRESS_PROPERTIES = {
+    filename: 'filename',
+    ratio: 'ratio',
+    status: 'status'
+};
+
+/**
  * @class
  */
 class CompilerStrategyProgress {
@@ -79,9 +89,9 @@ class CompilerStrategyProgress {
      */
     toJSON() {
         return {
-            filename: this.filename,
-            ratio: this.ratio,
-            status: this.status
+            [PROGRESS_PROPERTIES.filename]: this.filename,
+            [PROGRESS_PROPERTIES.ratio]: this.ratio,
+            [PROGRESS_PROPERTIES.status]: this.status
         };
     }
 
@@ -93,9 +103,9 @@ class CompilerStrategyProgress {
         if (obj instanceof CompilerStrategyProgress) {
             return obj;
         } else {
-            const filename = get(obj, 'filename'),
-                ratio = get(obj, 'ratio', 0),
-                status = get(obj, 'status', '');
+            const filename = get(obj, PROGRESS_PROPERTIES.filename),
+                ratio = get(obj, PROGRESS_PROPERTIES.ratio, 0),
+                status = get(obj, PROGRESS_PROPERTIES.status, '');
 
             return new CompilerStrategyProgress(filename, ratio, status);
         }

@@ -7,6 +7,8 @@ import webpack from 'webpack';
 import MemoryFs from 'memory-fs';
 import StatsWriterPlugin from 'webpack-stats-writer-plugin';
 import ProgressPlugin from 'webpack/lib/ProgressPlugin';
+import COMPILER_PROPERTIES from './CompilerProperties';
+import WEBPACK_PROPERTIES from './CompilerWebpackProperties';
 
 /**
  * @class
@@ -21,11 +23,11 @@ class CompilerFactory {
         const compiler = webpackOptions && webpack(webpackOptions);
 
         if (compiler) {
-            const memoryFs = compilerOptions.memoryFs === true,
-                json = compilerOptions.json === true,
-                filename = webpackOptions.filename,
-                progress = compilerOptions.progress,
-                progressCallback = compilerOptions.progressCallback || noop;
+            const memoryFs = compilerOptions[COMPILER_PROPERTIES.memoryFs] === true,
+                json = compilerOptions[COMPILER_PROPERTIES.json] === true,
+                filename = webpackOptions[WEBPACK_PROPERTIES.filename],
+                progress = compilerOptions[COMPILER_PROPERTIES.progress],
+                progressCallback = webpackOptions[WEBPACK_PROPERTIES.progressCallback] || noop;
 
             if (memoryFs) {
                 compiler.outputFileSystem = new MemoryFs();

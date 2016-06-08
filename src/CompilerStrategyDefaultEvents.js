@@ -6,6 +6,7 @@ import {
 import CompilerStrategyError from './CompilerStrategyError';
 import STRATEGY_MESSAGES from './CompilerStrategyMessages';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
+import FAIL_ON_PROPERTIES from './CompilerFailOnProperties';
 
 /**
  * @type {Object<String,Function>}
@@ -18,8 +19,8 @@ export default {
      * @returns {void}
      */
     [STRATEGY_EVENTS.failOn]: (options, results) => {
-        const failOnErrors = isObject(options) ? get(options, 'errors', false) : options,
-            failOnWarnings = isObject(options) ? get(options, 'warnings', false) : options;
+        const failOnErrors = isObject(options) ? get(options, FAIL_ON_PROPERTIES.errors, false) : options,
+            failOnWarnings = isObject(options) ? get(options, FAIL_ON_PROPERTIES.warnings, false) : options;
 
         let fatalErrors = [],
             errors = [],

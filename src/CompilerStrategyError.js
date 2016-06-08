@@ -13,7 +13,7 @@ const SYSTEM_PROPERTIES = ['message', 'fileName', 'lineNumber', 'stack'];
  * @private
  * @type {String}
  */
-const WRAPPER_KEY = '$CompilerStrategyError$';
+const WRAPPER_PROPERTY = '$CompilerStrategyError$';
 
 /**
  * @class
@@ -101,7 +101,7 @@ class CompilerStrategyError extends Error {
                 }
             });
 
-            delete err[WRAPPER_KEY];
+            delete err[WRAPPER_PROPERTY];
 
             return err;
         }
@@ -116,7 +116,7 @@ class CompilerStrategyError extends Error {
 
         wrapper.type = err.constructor.name;
         wrapper.stack = err.stack;
-        wrapper[WRAPPER_KEY] = true;
+        wrapper[WRAPPER_PROPERTY] = true;
 
         return wrapper;
     }
@@ -126,7 +126,7 @@ class CompilerStrategyError extends Error {
      * @returns {Boolean}
      */
     static isError(obj) {
-        return isObject(obj) && obj[WRAPPER_KEY] === true;
+        return isObject(obj) && obj[WRAPPER_PROPERTY] === true;
     }
 }
 
