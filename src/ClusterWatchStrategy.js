@@ -1,7 +1,4 @@
 import {
-    isError
-} from 'lodash';
-import {
     join,
     resolve as resolvePath,
     dirname,
@@ -14,7 +11,7 @@ import {
     ConfigFinder
 } from 'webpack-config';
 import glob2base from 'glob2base';
-import gaze from 'gaze';
+import chokidar from 'chokidar';
 import minimatch from 'minimatch';
 import ClusterRunStrategy from './ClusterRunStrategy';
 import CompilerStrategyResult from './CompilerStrategyResult';
@@ -51,7 +48,7 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
     constructor(compilerOptions = {}, webpackOptions = {}) {
         super(compilerOptions, webpackOptions);
 
-        WATCHERS.set(this, new Map());
+        WATCHERS.set(this, []);
         QUEUE.set(this, new Map());
     }
 
@@ -64,7 +61,7 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
 
     /**
      * @private
-     * @returns {Map<String,Gaze>}
+     * @returns {FSWatcher[]}
      */
     get watchers() {
         return WATCHERS.get(this);
@@ -83,17 +80,11 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
      */
     afterExecute() {
         return super.afterExecute().then(() => {
-            let promises = [];
+            return Promise.all(this.watchers.map(watcher => {
+                watcher.close();
 
-            for (const watcher of this.watchers.values()) {
-                promises.push(new Promise(resolve => {
-                    watcher.on('end', resolve);
-                }));
-
-                watcher.close(true);
-            }
-
-            return Promise.all(promises);
+                return Promise.resolve();
+            }));
         });
     }
 
@@ -105,21 +96,15 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
      */
     watch(pattern, callback) {
         return new Promise((resolve, reject) => {
-            gaze(pattern, (err, watcher) => {
-                this.watchers.set(pattern, watcher);
+            const watcher = chokidar.watch(pattern, {
+                ignoreInitial: true
+            }).on('ready', () => {
+                this.watchers.push(watcher);
 
-                watcher.on('all', (event, filename) => {
-                    if (event !== 'deleted') {
-                        callback(filename);
-                    }
-                });
-
-                if (isError(err)) {
-                    reject(err);
-                } else {
-                    resolve(watcher);
-                }
-            });
+                resolve(watcher);
+            }).on('add', callback)
+                .on('change', callback)
+                .on('error', reject);
         });
     }
 

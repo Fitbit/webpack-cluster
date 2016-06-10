@@ -150,8 +150,9 @@ describe('CompilerAdapter', () => {
         const closeWatchers = (...watchers) => {
             return Promise.all(watchers.map(watcher => {
                 return new Promise(resolve => {
-                    watcher.on('end', resolve);
-                    watcher.close(true);
+                    watcher.close();
+
+                    resolve();
                 });
             }));
         };
