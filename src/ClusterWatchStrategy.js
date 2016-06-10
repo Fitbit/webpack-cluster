@@ -1,4 +1,7 @@
 import {
+    merge
+} from 'lodash';
+import {
     join,
     resolve as resolvePath,
     dirname,
@@ -91,14 +94,16 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
     /**
      * @private
      * @param {String} pattern
+     * @param {Object} options
      * @param {Function} callback
      * @returns {Promise}
      */
-    watch(pattern, callback) {
+    watch(pattern, options, callback) {
         return new Promise((resolve, reject) => {
-            const watcher = chokidar.watch(pattern, {
-                ignoreInitial: true
-            }).on('ready', () => {
+            const watcher = chokidar.watch(pattern, merge({}, options, {
+                ignoreInitial: true,
+                atomic: true
+            })).on('ready', () => {
                 this.watchers.push(watcher);
 
                 resolve(watcher);
@@ -115,7 +120,7 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
      * @returns {Promise}
      */
     mainWatch(pattern, callback) {
-        return this.watch(pattern, filename => {
+        return this.watch(pattern, {}, filename => {
             const results = [];
 
             results.push(new CompilerStrategyResult(pattern, [ filename ]));
@@ -133,7 +138,7 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
     closestWatch(pattern, callback) {
         const cwd = glob2base(new Glob(pattern));
 
-        return this.watch(join(cwd, '**/*.*'), filename => {
+        return this.watch(join(cwd, '**/*.*'), {}, filename => {
             if (!minimatch(filename, pattern)) {
                 this.findAll(join(dirname(filename), basename(pattern))).then(results => this.compileAll(results, callback));
             }

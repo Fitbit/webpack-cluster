@@ -147,15 +147,15 @@ describe('CompilerAdapter', () => {
     });
 
     describe('#watch()', () => {
-        const closeWatchers = (...watchers) => {
-            return Promise.all(watchers.map(watcher => {
-                return new Promise(resolve => {
-                    watcher.close();
+        let lastWatchers;
 
-                    resolve();
-                });
-            }));
-        };
+        afterEach(done => {
+            if (Array.isArray(lastWatchers)) {
+                lastWatchers.forEach(watcher => watcher.close());
+            }
+
+            done();
+        });
 
         it('should watch successfully', done => {
             const compilerAdapter = new CompilerAdapter({
@@ -163,8 +163,11 @@ describe('CompilerAdapter', () => {
                 silent: true
             });
 
-            compilerAdapter.watch('./test/fixtures/webpack.!(3).config.js')
-                .then(watchers => closeWatchers(...watchers).then(done));
+            compilerAdapter.watch('./test/fixtures/webpack.!(3).config.js').then(watchers => {
+                lastWatchers = watchers;
+
+                done();
+            });
         });
 
         it('should re-compile on file change', done => {
@@ -173,14 +176,12 @@ describe('CompilerAdapter', () => {
                 silent: true
             });
 
-            let lastWatchers;
-
             copy('./test/fixtures/webpack.1.config.js', './test/fixtures/tmp/webpack.1.config.js', () => {
                 compilerAdapter.watch('./test/fixtures/tmp/webpack.*.config.js', (err, stats) => {
                     expect(err).toEqual(null);
                     expect(stats).toEqual(jasmine.any(Object));
 
-                    closeWatchers(...lastWatchers).then(done);
+                    done();
                 }).then(watchers => {
                     lastWatchers = watchers;
 
@@ -195,15 +196,13 @@ describe('CompilerAdapter', () => {
                 silent: true
             });
 
-            let lastWatchers;
-
             copy('./test/fixtures/sub', './test/fixtures/tmp/sub', () => {
                 copy('./test/fixtures/webpack.1.config.js', './test/fixtures/tmp/webpack.1.config.js', () => {
                     compilerAdapter.watch('./test/fixtures/tmp/webpack.*.config.js', (err, stats) => {
                         expect(err).toEqual(null);
                         expect(stats).toEqual(jasmine.any(Object));
 
-                        closeWatchers(...lastWatchers).then(done);
+                        done();
                     }).then(watchers => {
                         lastWatchers = watchers;
 
