@@ -2,9 +2,9 @@ import {
     get
 } from 'lodash';
 import {
+    ConfigBuilder,
     ConfigFinder
 } from 'webpack-config';
-import ConfigBuilder from './ConfigBuilder';
 import ClusterCompilerStrategy from './ClusterCompilerStrategy';
 import CompilerStrategyProgress from './CompilerStrategyProgress';
 import CompilerStrategyStats from './CompilerStrategyStats';
@@ -12,6 +12,7 @@ import CompilerStrategyResult from './CompilerStrategyResult';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
 import FORK_EVENTS from './ClusterForkEvents';
 import FORK_PROPERTIES from './ClusterForkProperties';
+import WEBPACK_PROPERTIES from './CompilerWebpackProperties';
 
 /**
  * @private
@@ -38,9 +39,12 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
      */
     webpackOptionsFor(pattern) {
         return new ConfigBuilder()
-            .reset()
             .merge(this.webpackOptions)
-            .pattern(pattern)
+            .merge({
+                [WEBPACK_PROPERTIES.resolveCluster]: {
+                    pattern: pattern
+                }
+            })
             .build();
     }
 

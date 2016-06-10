@@ -1,5 +1,4 @@
 import {
-    get,
     isString,
     includes
 } from 'lodash';
@@ -15,28 +14,28 @@ import WEBPACK_PROPERTIES from './CompilerWebpackProperties';
 
 /**
  * @private
- * @param {String} key
- * @param {*} value
- * @param {*} fallback
+ * @param {String} path
+ * @param {Config} value
+ * @param {Config} fallback
  * @returns {*}
  */
-const getOrDefault = (key, value, fallback) => get(value, key, get(fallback, key));
+const getOrDefault = (path, value, fallback) => value.get(path, fallback.get(path));
 
 /**
  * @type {Object<String,Function>}
  */
 export default {
     /**
-     * @param {String} key
+     * @param {String} path
      * @param {Config} current
      * @param {Config} previous
      * @returns {String}
      */
-    'output.path': (key, current, previous) => {
+    'output.path': (path, current, previous) => {
         let base = getOrDefault(`${WEBPACK_PROPERTIES.resolveCluster}.base`, current, previous),
             pattern = getOrDefault(`${WEBPACK_PROPERTIES.resolveCluster}.pattern`, current, previous),
-            currentPath = get(current, key),
-            previousPath = get(previous, key);
+            currentPath = current.get(path),
+            previousPath = previous.get(path);
 
         const isGlob = includes(pattern, '*');
 

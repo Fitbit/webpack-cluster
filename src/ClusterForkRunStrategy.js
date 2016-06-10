@@ -1,8 +1,22 @@
 import {
     isError
 } from 'lodash';
-import ConfigBuilder from './ConfigBuilder';
+import {
+    supportsColor
+} from 'chalk';
+import {
+    ConfigBuilder
+} from 'webpack-config';
 import CompilerStrategy from './CompilerStrategy';
+import WEBPACK_PROPERTIES from './CompilerWebpackProperties';
+import STATS_OPTIONS from './StatsOptions';
+import CONFIG_HOOKS from './ConfigHooks';
+
+/**
+ * @private
+ * @type {Boolean}
+ */
+const SUPPORTS_COLOR = supportsColor !== false;
 
 /**
  * @class
@@ -15,12 +29,18 @@ class ClusterForkRunStrategy extends CompilerStrategy {
      * @returns {Object}
      */
     webpackOptionsFor(config) {
-        return new ConfigBuilder(config)
-            .reset()
-            .colors()
-            .stats()
+        return new ConfigBuilder()
+            .copyOf(config)
+            .merge({
+                [WEBPACK_PROPERTIES.stats]: {
+                    colors: SUPPORTS_COLOR
+                }
+            })
+            .defaults({
+                [WEBPACK_PROPERTIES.stats]: STATS_OPTIONS
+            })
             .merge(this.webpackOptions)
-            .applyHooks()
+            .applyHooks(CONFIG_HOOKS)
             .build();
     }
 
