@@ -1,4 +1,4 @@
-import {
+﻿import {
     merge
 } from 'lodash';
 import {
@@ -99,17 +99,17 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
      * @returns {Promise}
      */
     watch(pattern, options, callback) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             const watcher = chokidar.watch(pattern, merge({}, options, {
                 ignoreInitial: true,
-                atomic: true
+                atomic: true,
+                ignorePermissionErrors: true
             })).on('ready', () => {
                 this.watchers.push(watcher);
 
                 resolve(watcher);
             }).on('add', callback)
-                .on('change', callback)
-                .on('error', reject);
+                .on('change', callback);
         });
     }
 

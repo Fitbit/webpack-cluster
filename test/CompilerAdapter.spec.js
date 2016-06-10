@@ -1,4 +1,4 @@
-import {
+﻿import {
     appendFileSync,
     exists
 } from 'fs';
@@ -157,7 +157,7 @@ describe('CompilerAdapter', () => {
             done();
         });
 
-        beforeAll(done => copy('./test/fixtures', './test/tmp/fixtures', done));
+        beforeAll(done => copy('./test/fixtures', './test/tmp', done));
 
         afterAll(done => remove('./test/tmp', done));
 
@@ -167,7 +167,7 @@ describe('CompilerAdapter', () => {
                 silent: true
             });
 
-            compilerAdapter.watch('./test/fixtures/webpack.!(3).config.js').then(watchers => {
+            compilerAdapter.watch('./test/tmp/webpack.!(3).config.js').then(watchers => {
                 lastWatchers = watchers;
 
                 done();
@@ -180,15 +180,14 @@ describe('CompilerAdapter', () => {
                 silent: true
             });
 
-            compilerAdapter.watch('./test/tmp/fixtures/webpack.1.config.js', (err, stats) => {
+            compilerAdapter.watch('./test/tmp/webpack.1.config.js', (err, stats) => {
                 expect(err).toEqual(null);
                 expect(stats).toEqual(jasmine.any(Object));
-
-                done();
             }).then(watchers => {
                 lastWatchers = watchers;
 
-                appendFileSync('./test/tmp/fixtures/webpack.1.config.js', `// Modified at ${new Date()}\n`);
+                appendFileSync('./test/tmp/webpack.1.config.js', `// Modified at ${new Date()}\n`);
+                done();
             });
         });
 
@@ -198,15 +197,14 @@ describe('CompilerAdapter', () => {
                 silent: true
             });
 
-            compilerAdapter.watch('./test/tmp/fixtures/webpack.1.config.js', (err, stats) => {
+            compilerAdapter.watch('./test/tmp/webpack.1.config.js', (err, stats) => {
                 expect(err).toEqual(null);
                 expect(stats).toEqual(jasmine.any(Object));
-
-                done();
             }).then(watchers => {
                 lastWatchers = watchers;
 
-                appendFileSync('./test/tmp/fixtures/sub/sub/index.html', `<!--Modified at ${new Date()}-->\n`);
+                appendFileSync('./test/tmp/sub/sub/index.html', `<!--Modified at ${new Date()}-->\n`);
+                done();
             });
         });
     });
