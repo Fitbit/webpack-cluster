@@ -46,6 +46,7 @@
     "messageformat": "^0.3.1",
     "minimatch": "^3.0.0",
     "observatory": "^1.0.0",
+    "pretty-error": "^2.0.0",
     "pretty-hrtime": "^1.0.2",
     "throat": "^3.0.0",
     "tildify": "^1.2.0",

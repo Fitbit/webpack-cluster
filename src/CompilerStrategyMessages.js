@@ -45,9 +45,7 @@ const mf = new MessageFormat(LOCALE, null, {
         }
 
         return value;
-    },
-
-    stack: v => chalk.red(result(v, 'stack', ''))
+    }
 });
 
 /**
@@ -74,7 +72,7 @@ const MESSAGES = {
         other {configs}
      } {FILES,path,colors}`,
     compile: 'Compiling webpack config {FILE,path,colors}',
-    stats: 'Stats for webpack config {FILE,path,colors} {STATUS} {ERROR,stack}',
+    stats: 'Stats for webpack config {FILE,path,colors} {STATUS}',
     fatalError: `Cannot compile {SIZE, plural,
         =0 {zero}
         one {one}
@@ -84,7 +82,6 @@ const MESSAGES = {
         one {config}
         other {configs}
      } {FILES,path}`,
-    error: '{ERROR,stack}',
     fatalErrors: `{SIZE, plural,
         =0 {Zero}
         one {One}
