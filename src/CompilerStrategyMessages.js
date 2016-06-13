@@ -1,6 +1,5 @@
 import {
     mapValues,
-    result,
     wrap,
     trim
 } from 'lodash';
