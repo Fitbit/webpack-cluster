@@ -1,10 +1,15 @@
 /*eslint no-console: 0*/
 import {
     uniq,
-    flattenDeep
+    flattenDeep,
+    isError
 } from 'lodash';
 import prettyHrtime from 'pretty-hrtime';
 import observatory from 'observatory';
+import PrettyError from 'pretty-error';
+import {
+    supportsColor
+} from 'chalk';
 import STRATEGY_MESSAGES from './CompilerStrategyMessages';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
 import STATUS_LABELS from './CompilerStatusLabels';
@@ -16,6 +21,22 @@ import SYSTEM_DEFAULT_EVENTS from './CompilerStrategyDefaultEvents';
  * @type {Map}
  */
 const TASKS = new Map();
+
+/**
+ * @private
+ * @type {Boolean}
+ */
+const SUPPORTS_COLOR = supportsColor !== false;
+
+/**
+ * @private
+ * @type {PrettyError}
+ */
+const pe = new PrettyError();
+
+if (!SUPPORTS_COLOR) {
+    pe.withoutColors();
+}
 
 /**
  * @private
@@ -126,9 +147,13 @@ export default Object.assign({}, SYSTEM_DEFAULT_EVENTS, {
 
         console.log(`${STATUS_PREFIXES.info} %s`, STRATEGY_MESSAGES.stats({
             FILE: stats.filename,
-            STATUS: status,
-            ERROR: stats.fatalError
+            STATUS: status
         }));
+
+        if (isError(stats.fatalError)) {
+            console.log(pe.render(stats.fatalError));
+        }
+
         console.log(stats.toString());
     },
 

@@ -183,11 +183,12 @@ describe('CompilerAdapter', () => {
             compilerAdapter.watch('./test/tmp/webpack.1.config.js', (err, stats) => {
                 expect(err).toEqual(null);
                 expect(stats).toEqual(jasmine.any(Object));
+
+                done();
             }).then(watchers => {
                 lastWatchers = watchers;
 
                 appendFileSync('./test/tmp/webpack.1.config.js', `// Modified at ${new Date()}\n`);
-                done();
             });
         });
 
@@ -200,11 +201,12 @@ describe('CompilerAdapter', () => {
             compilerAdapter.watch('./test/tmp/webpack.1.config.js', (err, stats) => {
                 expect(err).toEqual(null);
                 expect(stats).toEqual(jasmine.any(Object));
+
+                done();
             }).then(watchers => {
                 lastWatchers = watchers;
 
                 appendFileSync('./test/tmp/sub/sub/index.html', `<!--Modified at ${new Date()}-->\n`);
-                done();
             });
         });
     });
