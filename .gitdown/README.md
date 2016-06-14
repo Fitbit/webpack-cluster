@@ -6,8 +6,7 @@
 {"gitdown": "badge", "name": "david"}
 {"gitdown": "badge", "name": "david-dev"}
 
-webpack-cluster
-===============
+# {"gitdown": "gitinfo", "name": "name"}
 
 Helps to make parallel webpack compilation easily
 
