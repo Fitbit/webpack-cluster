@@ -50,7 +50,7 @@
     "pretty-hrtime": "^1.0.2",
     "throat": "^3.0.0",
     "tildify": "^1.2.0",
-    "webpack-stats-writer-plugin": "^1.0.2",
+    "stats-writer-webpack-plugin": "^1.0.0",
     "yargs": "^4.7.1"
   },
   "peerDependencies": {

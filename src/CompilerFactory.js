@@ -5,7 +5,7 @@ import {
 } from 'lodash';
 import webpack from 'webpack';
 import MemoryFs from 'memory-fs';
-import StatsWriterPlugin from 'webpack-stats-writer-plugin';
+import StatsWriterWebpackPlugin from 'stats-writer-webpack-plugin';
 import ProgressPlugin from 'webpack/lib/ProgressPlugin';
 import COMPILER_PROPERTIES from './CompilerProperties';
 import WEBPACK_PROPERTIES from './CompilerWebpackProperties';
@@ -34,7 +34,7 @@ class CompilerFactory {
             }
 
             if (json) {
-                compiler.apply(new StatsWriterPlugin());
+                compiler.apply(new StatsWriterWebpackPlugin());
             }
 
             if (progress && isString(filename) && isFunction(progressCallback)) {
