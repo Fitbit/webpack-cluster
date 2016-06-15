@@ -59,6 +59,7 @@ class CompilerStrategyStats {
     }
 
     /**
+     * @readonly
      * @type {String}
      */
     get filename() {
@@ -66,6 +67,7 @@ class CompilerStrategyStats {
     }
 
     /**
+     * @readonly
      * @type {Object}
      */
     get raw() {
@@ -73,6 +75,7 @@ class CompilerStrategyStats {
     }
 
     /**
+     * @readonly
      * @type {Error}
      */
     get fatalError() {
@@ -80,6 +83,7 @@ class CompilerStrategyStats {
     }
 
     /**
+     * @readonly
      * @type {Boolean}
      */
     get hasFatalError() {
@@ -87,6 +91,7 @@ class CompilerStrategyStats {
     }
 
     /**
+     * @readonly
      * @type {Boolean}
      */
     get hasErrors() {
@@ -94,10 +99,19 @@ class CompilerStrategyStats {
     }
 
     /**
+     * @readonly
      * @type {Boolean}
      */
     get hasWarnings() {
         return result(this.raw, STATS_PROPERTIES.hasWarnings, false);
+    }
+
+    /**
+     * @readonly
+     * @type {Object}
+     */
+    get options() {
+        return get(this.raw, STATS_PROPERTIES.statsOptions, STATS_OPTIONS);
     }
 
     /**
@@ -107,7 +121,7 @@ class CompilerStrategyStats {
      */
     toString(options) {
         if (!isPlainObject(options)) {
-            options = get(this.raw, STATS_PROPERTIES.statsOptions, STATS_OPTIONS);
+            options = this.options;
         }
 
         let toString;
