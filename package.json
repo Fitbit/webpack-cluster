@@ -44,7 +44,7 @@
     "lodash": "^4.13.1",
     "memory-fs": "^0.3.0",
     "messageformat": "^0.3.1",
-    "minimatch": "^3.0.0",
+    "minimatch": "^3.0.2",
     "observatory": "^1.0.0",
     "pretty-error": "^2.0.0",
     "pretty-hrtime": "^1.0.2",
