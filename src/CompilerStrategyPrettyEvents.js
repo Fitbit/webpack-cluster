@@ -34,6 +34,12 @@ const SUPPORTS_COLOR = supportsColor !== false;
  */
 const pe = new PrettyError();
 
+pe.appendStyle({
+    'pretty-error > header > message': {
+        color: 'white'
+    }
+});
+
 if (!SUPPORTS_COLOR) {
     pe.withoutColors();
 }
