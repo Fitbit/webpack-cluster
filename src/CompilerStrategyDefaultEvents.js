@@ -57,10 +57,12 @@ export default {
 
             allErrors = uniq(allErrors);
 
-            throw new CompilerStrategyError(STRATEGY_MESSAGES.fatalError({
-                FILES: allErrors,
-                SIZE: allErrors.length
-            }));
+            if (allErrors.length > 0) {
+                throw new CompilerStrategyError(STRATEGY_MESSAGES.fatalError({
+                    FILES: allErrors,
+                    SIZE: allErrors.length
+                }));
+            }
         }
     }
 };
