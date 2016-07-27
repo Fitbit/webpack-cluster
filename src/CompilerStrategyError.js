@@ -13,7 +13,7 @@ const SYSTEM_PROPERTIES = ['message', 'fileName', 'lineNumber', 'stack'];
  * @private
  * @type {String}
  */
-const WRAPPER_PROPERTY = '$CompilerStrategyError$';
+const WRAPPER_PROPERTY = __filename;
 
 /**
  * @class
@@ -50,7 +50,7 @@ class CompilerStrategyError extends Error {
     }
 
     /**
-     * @param {Object} obj
+     * @param {Object|Error} obj
      * @returns {Error}
      */
     static fromJSON(obj) {
@@ -111,7 +111,7 @@ class CompilerStrategyError extends Error {
      * @param {Error} err
      * @returns {CompilerStrategyError}
      */
-    static fromError(err) {
+    static wrap(err) {
         const wrapper = new CompilerStrategyError(err.message, err.fileName, err.lineNumber);
 
         wrapper.type = err.constructor.name;
@@ -125,7 +125,7 @@ class CompilerStrategyError extends Error {
      * @param {Object} obj
      * @returns {Boolean}
      */
-    static isError(obj) {
+    static isWrapper(obj) {
         return isObject(obj) && obj[WRAPPER_PROPERTY] === true;
     }
 }

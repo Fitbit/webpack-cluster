@@ -2,7 +2,7 @@
  * @type {Object<String,String>}
  */
 export default {
-    config: 'Specifies configuration files using `minimatch` pattern',
+    config: 'Specifies configuration files using `glob` pattern',
     progress: 'Displays compilation progress',
     json: 'Saves `stats` object to JSON file',
     watch: 'Runs webpack compiler in `watch` mode',

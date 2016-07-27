@@ -2,20 +2,9 @@
     merge
 } from 'lodash';
 import {
-    join,
-    resolve as resolvePath,
-    dirname,
-    basename
+    resolve as resolvePath
 } from 'path';
-import {
-    Glob
-} from 'glob';
-import {
-    ConfigFinder
-} from 'webpack-config';
-import glob2base from 'glob2base';
 import chokidar from 'chokidar';
-import minimatch from 'minimatch';
 import ClusterRunStrategy from './ClusterRunStrategy';
 import CompilerStrategyResult from './CompilerStrategyResult';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
@@ -33,12 +22,6 @@ const WORKER_PATH = require.resolve('./ClusterWatchWorker');
 const WATCHERS = new WeakMap();
 
 /**
- * @private
- * @type {WeakMap}
- */
-const QUEUE = new WeakMap();
-
-/**
  * @class
  * @extends {ClusterRunStrategy}
  */
@@ -52,7 +35,6 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
         super(compilerOptions, webpackOptions);
 
         WATCHERS.set(this, []);
-        QUEUE.set(this, new Map());
     }
 
     /**
@@ -68,14 +50,6 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
      */
     get watchers() {
         return WATCHERS.get(this);
-    }
-
-    /**
-     * @private
-     * @returns {Map<String,Boolean>}
-     */
-    get queue() {
-        return QUEUE.get(this);
     }
 
     /**
@@ -130,42 +104,10 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
     }
 
     /**
-     * @private
-     * @param {String} pattern
-     * @param {Function} [callback]
-     * @returns {Promise}
-     */
-    closestWatch(pattern, callback) {
-        const cwd = glob2base(new Glob(pattern));
-
-        return this.watch(join(cwd, '**/*.*'), {}, filename => {
-            if (!minimatch(filename, pattern)) {
-                this.findAll(join(dirname(filename), basename(pattern))).then(results => this.compileAll(results, callback));
-            }
-        });
-    }
-
-    /**
      * @override
      */
     compile(filename, pattern, callback) {
-        this.queue.set(filename, true);
-
-        return this.closeFork(filename).then(() => super.compile(filename, pattern, callback).then(stats => {
-            this.queue.delete(filename);
-
-            return Promise.resolve(stats);
-        }));
-    }
-
-    /**
-     * @override
-     */
-    find(pattern) {
-        const files = ConfigFinder.INSTANCE.findClosestConfigs(pattern)
-            .filter(filename => !this.queue.has(filename));
-
-        return Promise.resolve(new CompilerStrategyResult(pattern, files));
+        return this.closeFork(filename).then(() => super.compile(filename, pattern, callback));
     }
 
     /**
@@ -176,10 +118,7 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
 
         return this.beforeExecute().then(() => {
             return Promise.all(patterns.map(x => resolvePath(x)).map(pattern => {
-                return Promise.all([
-                    this.mainWatch(pattern, callback),
-                    this.closestWatch(pattern, callback)
-                ]);
+                return this.mainWatch(pattern, callback);
             }));
         }).catch(err => this.afterExecute().then(() => Promise.reject(err)));
     }

@@ -96,7 +96,7 @@ class CompilerStrategyProgress {
     }
 
     /**
-     * @param {Object} obj
+     * @param {Object|CompilerStrategyProgress} obj
      * @returns {CompilerStrategyProgress}
      */
     static fromJSON(obj) {

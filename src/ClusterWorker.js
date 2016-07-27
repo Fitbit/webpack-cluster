@@ -32,7 +32,7 @@ const progress = (filename, ratio, status) => {
  */
 const done = (filename, stats, err) => {
     if (isError(err)) {
-        err = CompilerStrategyError.fromError(err);
+        err = CompilerStrategyError.wrap(err);
     }
 
     process.send({
