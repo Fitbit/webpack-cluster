@@ -1,7 +1,3 @@
-import {
-    copy,
-    remove
-} from 'fs-extra';
 import ClusterRunStrategy from '../src/ClusterRunStrategy';
 import CompilerStrategyEventsFactory from '../src/CompilerStrategyEventsFactory';
 import CompilerStrategyInvoker from '../src/CompilerStrategyInvoker';

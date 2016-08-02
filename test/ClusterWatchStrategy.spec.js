@@ -107,7 +107,7 @@ describe('ClusterWatchStrategy', () => {
 
                 addChanges('./test/tmp/webpack.1.config.js');
 
-                setTimeout(() => addChanges('./test/tmp/webpack.1.config.js'), 250)
+                setTimeout(() => addChanges('./test/tmp/webpack.1.config.js'), 250);
             });
         });
     });

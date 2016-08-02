@@ -217,7 +217,7 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
      */
     doneOrFail(results) {
         return this.done(results)
-            .then(results => this.fail(results));
+            .then(x => this.fail(x));
     }
 
     /**
