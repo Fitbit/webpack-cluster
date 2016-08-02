@@ -7,8 +7,7 @@
 {"gitdown": "badge", "name": "david-dev"}
 
 # {"gitdown": "gitinfo", "name": "name"}
-
-Helps to make parallel webpack compilation easily
+> Helps to make parallel webpack compilation easily
 
 ## Usage
 

@@ -6,14 +6,12 @@
 [![Dependency Status](https://img.shields.io/david/mdreizin/webpack-cluster.svg?style=flat-square)](https://david-dm.org/mdreizin/webpack-cluster)
 [![Development Dependency Status](https://img.shields.io/david/dev/mdreizin/webpack-cluster.svg?style=flat-square)](https://david-dm.org/mdreizin/webpack-cluster#info=devDependencies)
 
-webpack-cluster
-===============
+<h1 id="webpack-cluster">webpack-cluster</h1>
+> Helps to make parallel webpack compilation easily
 
-Helps to make parallel webpack compilation easily
+<h2 id="webpack-cluster-usage">Usage</h2>
 
-<h2 id="usage">Usage</h2>
-
-<h3 id="usage-cli">CLI</h3>
+<h3 id="webpack-cluster-usage-cli">CLI</h3>
 
 ![](https://raw.github.com/mdreizin/webpack-cluster/master/.gitdown/cli.gif)
 
@@ -40,7 +38,7 @@ Miscellaneous:
 
 ```
 
-<h3 id="usage-gulp-js">Gulp.js</h3>
+<h3 id="webpack-cluster-usage-gulp-js">Gulp.js</h3>
 
 ```javascript
 import gulp from 'gulp';
