@@ -9,7 +9,7 @@ import ClusterRunStrategy from '../src/ClusterRunStrategy';
 describe('ClusterRunStrategy', () => {
     let callbacks;
 
-    afterEach(done => remove('./test/fixtures/tmp', done));
+    afterAll(done => remove('./test/fixtures/tmp', done));
 
     beforeEach(() => {
         callbacks = {

@@ -13,8 +13,6 @@ const addChanges = filename => appendFileSync(filename, `// Modified at ${new Da
 describe('ClusterWatchStrategy', () => {
     let callbacks;
 
-    afterEach(done => remove('./test/fixtures/tmp', done));
-
     beforeEach(() => {
         callbacks = {
             done: () => {}
@@ -85,6 +83,8 @@ describe('ClusterWatchStrategy', () => {
         });
 
         it('should recompile successfully', done => {
+            let lastTimeoutId;
+
             const strategy = new ClusterWatchStrategy({
                 memoryFs: true
             });
@@ -100,6 +100,8 @@ describe('ClusterWatchStrategy', () => {
                 expect(stats).toEqual(jasmine.any(Object));
 
                 if (count === 2) {
+                    clearTimeout(lastTimeoutId);
+
                     done();
                 }
             }).then(watchers => {
@@ -107,7 +109,7 @@ describe('ClusterWatchStrategy', () => {
 
                 addChanges('./test/tmp/webpack.1.config.js');
 
-                setTimeout(() => addChanges('./test/tmp/webpack.1.config.js'), 250);
+                lastTimeoutId = setTimeout(() => addChanges('./test/tmp/webpack.1.config.js'), 350);
             });
         });
     });
