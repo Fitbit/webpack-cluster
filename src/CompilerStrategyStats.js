@@ -157,7 +157,7 @@ class CompilerStrategyStats {
     }
 
     /**
-     * @param {Object} obj
+     * @param {Object|CompilerStrategyStats} obj
      * @returns {CompilerStrategyStats}
      */
     static fromJSON(obj) {
@@ -169,7 +169,7 @@ class CompilerStrategyStats {
 
             let fatalError = get(obj, STATS_PROPERTIES.fatalError);
 
-            if (CompilerStrategyError.isError(fatalError)) {
+            if (CompilerStrategyError.isWrapper(fatalError)) {
                 fatalError = CompilerStrategyError.fromJSON(fatalError);
             }
 

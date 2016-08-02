@@ -10,6 +10,5 @@ export default {
     compilationDone: 'compilationDone',
     compilationStats: 'compilationStats',
     done: 'done',
-    failOn: 'failOn',
     time: 'time'
 };

@@ -1,5 +1,7 @@
 import {
-    get
+    get,
+    uniq,
+    isObject
 } from 'lodash';
 import {
     ConfigBuilder,
@@ -9,10 +11,13 @@ import ClusterCompilerStrategy from './ClusterCompilerStrategy';
 import CompilerStrategyProgress from './CompilerStrategyProgress';
 import CompilerStrategyStats from './CompilerStrategyStats';
 import CompilerStrategyResult from './CompilerStrategyResult';
+import CompilerStrategyError from './CompilerStrategyError';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
+import STRATEGY_MESSAGES from './CompilerStrategyMessages';
 import FORK_EVENTS from './ClusterForkEvents';
 import FORK_PROPERTIES from './ClusterForkProperties';
 import WEBPACK_PROPERTIES from './CompilerWebpackProperties';
+import FAIL_ON_PROPERTIES from './CompilerFailOnProperties';
 
 /**
  * @private
@@ -50,22 +55,15 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
 
     /**
      * @protected
-     * @param {String} pattern
-     * @returns {Promise<CompilerStrategyResult>}
-     */
-    find(pattern) {
-        const files = ConfigFinder.INSTANCE.findConfigs(pattern);
-
-        return Promise.resolve(new CompilerStrategyResult(pattern, files));
-    }
-
-    /**
-     * @protected
      * @param {...String} patterns
      * @returns {Promise<CompilerStrategyResult[]>}
      */
     findAll(...patterns) {
-        return Promise.all(patterns.map(pattern => this.find(pattern))).then(results => {
+        return Promise.all(patterns.map(pattern => {
+            const files = ConfigFinder.INSTANCE.findConfigs(pattern);
+
+            return Promise.resolve(new CompilerStrategyResult(pattern, files));
+        })).then(results => {
             this.emit(STRATEGY_EVENTS.find, results);
 
             return Promise.resolve(results);
@@ -132,7 +130,7 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
 
                 return Promise.resolve(stats);
             }));
-        })).then(() => this.done(results), () => this.done(results));
+        })).then(() => this.doneOrFail(results), () => this.doneOrFail(results));
     }
 
     /**
@@ -151,13 +149,75 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
 
         this.emit(STRATEGY_EVENTS.done, results);
 
-        try {
-            this.emit(STRATEGY_EVENTS.failOn, this.failOnOptions, results);
+        return Promise.resolve(results);
+    }
 
-            return Promise.resolve(results);
-        } catch (err) {
-            return Promise.reject(err);
+    /**
+     * @private
+     * @param {CompilerStrategyResult[]} results
+     * @throws {CompilerStrategyError}
+     * @returns {Promise}
+     */
+    fail(results) {
+        const failOnErrors = isObject(this.failOnOptions) ? get(this.failOnOptions, FAIL_ON_PROPERTIES.errors, false) : this.failOnOptions,
+            failOnWarnings = isObject(this.failOnOptions) ? get(this.failOnOptions, FAIL_ON_PROPERTIES.warnings, false) : this.failOnOptions;
+
+        let fatalErrors = [],
+            errors = [],
+            warnings = [];
+
+        results.forEach(result => {
+            result.files.forEach(filename => {
+                const stats = result.stats.get(filename);
+
+                if (stats.hasFatalError) {
+                    fatalErrors.push(filename);
+                } else if (stats.hasErrors) {
+                    errors.push(filename);
+                } else if (stats.hasWarnings) {
+                    warnings.push(filename);
+                }
+            });
+        });
+
+        fatalErrors = uniq(fatalErrors);
+        errors = uniq(errors);
+        warnings = uniq(warnings);
+
+        if (fatalErrors.length > 0 || errors.length > 0 || warnings.length > 0) {
+            let allErrors = [...fatalErrors];
+
+            if (errors.length > 0 && failOnErrors === true) {
+                allErrors.push(...errors);
+            }
+
+            if (warnings.length > 0 && failOnWarnings === true) {
+                allErrors.push(...warnings);
+            }
+
+            allErrors = uniq(allErrors);
+
+            if (allErrors.length > 0) {
+                const err = new CompilerStrategyError(STRATEGY_MESSAGES.fatalError({
+                    FILES: allErrors,
+                    SIZE: allErrors.length
+                }));
+
+                return Promise.reject(err);
+            }
         }
+
+        return Promise.resolve(results);
+    }
+
+    /**
+     * @private
+     * @param {CompilerStrategyResult[]} results
+     * @returns {Promise}
+     */
+    doneOrFail(results) {
+        return this.done(results)
+            .then(x => this.fail(x));
     }
 
     /**

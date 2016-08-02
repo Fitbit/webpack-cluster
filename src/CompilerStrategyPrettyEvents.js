@@ -14,7 +14,6 @@ import STRATEGY_MESSAGES from './CompilerStrategyMessages';
 import STRATEGY_EVENTS from './CompilerStrategyEvents';
 import STATUS_LABELS from './CompilerStatusLabels';
 import STATUS_PREFIXES from './CompilerStatusPrefixes';
-import SYSTEM_DEFAULT_EVENTS from './CompilerStrategyDefaultEvents';
 
 /**
  * @private
@@ -57,7 +56,7 @@ observatory.settings({
 /**
  * @type {Object<String,Function>}
  */
-export default Object.assign({}, SYSTEM_DEFAULT_EVENTS, {
+export default {
     /**
      * @private
      * @param {String[]} patterns
@@ -215,4 +214,4 @@ export default Object.assign({}, SYSTEM_DEFAULT_EVENTS, {
             TIME: prettyHrtime(time)
         }));
     }
-});
+};
