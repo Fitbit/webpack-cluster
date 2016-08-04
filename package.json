@@ -64,7 +64,7 @@
   },
   "peerDependencies": {
     "webpack": "1.x",
-    "webpack-config": "5.x"
+    "webpack-config": "6.x"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",

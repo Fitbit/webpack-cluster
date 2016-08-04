@@ -5,7 +5,7 @@ import {
 } from 'lodash';
 import {
     ConfigBuilder,
-    ConfigFinder
+    finder
 } from 'webpack-config';
 import ClusterCompilerStrategy from './ClusterCompilerStrategy';
 import CompilerStrategyProgress from './CompilerStrategyProgress';
@@ -60,7 +60,7 @@ class ClusterRunStrategy extends ClusterCompilerStrategy {
      */
     findAll(...patterns) {
         return Promise.all(patterns.map(pattern => {
-            const files = ConfigFinder.INSTANCE.findConfigs(pattern);
+            const files = finder.findConfigs(pattern);
 
             return Promise.resolve(new CompilerStrategyResult(pattern, files));
         })).then(results => {
