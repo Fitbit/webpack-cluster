@@ -1,5 +1,5 @@
 import {
-    ConfigLoader
+    loader
 } from 'webpack-config';
 import EventEmitter from 'events';
 import CompilerFactory from './CompilerFactory';
@@ -72,7 +72,7 @@ class CompilerStrategy extends EventEmitter {
     loadConfig(filename) {
         return new Promise((resolve, reject) => {
             try {
-                const config = ConfigLoader.INSTANCE.loadConfig(filename);
+                const config = loader.loadConfig(filename);
 
                 resolve(config);
             } catch (err) {
