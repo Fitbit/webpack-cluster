@@ -38,8 +38,8 @@
   },
   "keywords": [
     "webpack",
-    "webpack cluster",
-    "webpack parallel"
+    "webpack-cluster",
+    "webpack-parallel"
   ],
   "bugs": {
     "url": "https://github.com/mdreizin/webpack-cluster/issues"
