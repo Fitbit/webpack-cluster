@@ -85,7 +85,7 @@
     "jasmine": "^2.4.1",
     "jasmine-spec-reporter": "^2.4.0",
     "jsdoc": "^3.4.0",
-    "nyc": "^7.1.0",
+    "nyc": "^8.3.0",
     "semantic-release": "^4.3.5",
     "travis-after-all": "^1.4.4",
     "webpack": "^1.13.1",
