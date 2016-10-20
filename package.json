@@ -51,7 +51,7 @@
     "chokidar": "^1.6.0",
     "glob": "^7.0.3",
     "glob2base": "0.0.12",
-    "lodash": "^4.13.1",
+    "lodash": "^4.14.2",
     "memory-fs": "^0.3.0",
     "messageformat": "^0.3.1",
     "observatory": "^1.0.0",
