@@ -53,7 +53,7 @@
     "glob2base": "0.0.12",
     "lodash": "^4.13.1",
     "memory-fs": "^0.3.0",
-    "messageformat": "^0.3.1",
+    "messageformat": "^1.0.1",
     "observatory": "^1.0.0",
     "pretty-error": "^2.0.0",
     "pretty-hrtime": "^1.0.2",
