@@ -99,7 +99,7 @@ class ClusterWatchStrategy extends ClusterRunStrategy {
 
             results.push(new CompilerStrategyResult(pattern, [ filename ]));
 
-            this.compileAll(results, callback);
+            this.compileAll(results, callback).catch(err => {});
         });
     }
 
