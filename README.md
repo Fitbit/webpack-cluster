@@ -1,6 +1,6 @@
 [![NPM version](http://img.shields.io/npm/v/webpack-cluster.svg?style=flat-square)](https://www.npmjs.org/package/webpack-cluster)
 [![Travis build status](http://img.shields.io/travis/Fitbit/webpack-cluster/master.svg?style=flat-square)](https://travis-ci.org/Fitbit/webpack-cluster)
-[![AppVeyor build status](https://img.shields.io/appveyor/ci/Fitbit/webpack-cluster/master.svg?style=flat-square)](https://ci.appveyor.com/project/Fitbit/webpack-cluster/branch/master)
+[![AppVeyor build status](https://img.shields.io/appveyor/ci/mdreizin/webpack-cluster/master.svg?style=flat-square)](https://ci.appveyor.com/project/mdreizin/webpack-cluster/branch/master)
 [![Code Climate GPA](https://img.shields.io/codeclimate/github/Fitbit/webpack-cluster.svg?style=flat-square)](https://codeclimate.com/github/Fitbit/webpack-cluster)
 [![Code Climate Coverage](https://img.shields.io/codeclimate/coverage/github/Fitbit/webpack-cluster.svg?style=flat-square)](https://codeclimate.com/github/Fitbit/webpack-cluster)
 [![Dependency Status](https://img.shields.io/david/Fitbit/webpack-cluster.svg?style=flat-square)](https://david-dm.org/Fitbit/webpack-cluster)
@@ -10,13 +10,25 @@
 # webpack-cluster
 > Helps to make parallel webpack compilation easily
 
+![](https://raw.github.com/Fitbit/webpack-cluster/master/.gitdown/cli.gif)
+
+<a name="webpack-cluster-installation"></a>
+## Installation
+
+```bash
+npm install webpack-config webpack-cluster --save-dev
+```
+
+or
+
+```bash
+yarn add webpack-config webpack-cluster --dev
+```
+
 <a name="webpack-cluster-usage"></a>
 ## Usage
 
-<a name="webpack-cluster-usage-cli"></a>
-### CLI
-
-![](https://raw.github.com/Fitbit/webpack-cluster/master/.gitdown/cli.gif)
+`cli`
 
 ```
 $ webpack-cluster --config=**/webpack.config.js [options]
@@ -41,8 +53,7 @@ Miscellaneous:
 
 ```
 
-<a name="webpack-cluster-usage-gulp-js"></a>
-### Gulp.js
+`./gulpfile.js`
 
 ```javascript
 import gulp from 'gulp';
