@@ -68,7 +68,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",
-    "babel-eslint": "^7.1.0",
+    "babel-eslint": "^7.1.1",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-istanbul": "^3.1.1",
     "babel-plugin-transform-builtin-extend": "^1.1.0",
@@ -77,8 +77,7 @@
     "babel-register": "^6.11.6",
     "codeclimate-test-reporter": "^0.3.1",
     "eslint": "^3.13.0",
-    "eslint-config-mdreizin": "^1.1.1",
-    "eslint-plugin-babel": "^4.0.0",
+    "eslint-plugin-babel": "^4.0.1",
     "fs-extra": "^1.0.0",
     "gh-pages": "^0.12.0",
     "gitdown": "^2.4.8",
