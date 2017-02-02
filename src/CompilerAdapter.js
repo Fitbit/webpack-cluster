@@ -1,25 +1,51 @@
-import ClusterRunStrategy from './ClusterRunStrategy';
-import ClusterWatchStrategy from './ClusterWatchStrategy';
-import CompilerStrategyInvoker from './CompilerStrategyInvoker';
-import CompilerStrategyEventsFactory from './CompilerStrategyEventsFactory';
+import {
+    isBoolean,
+    isError
+} from 'lodash';
+import PromisePool from './PromisePool';
+import ForkPromise from './ForkPromise';
+import CompilerResult from './CompilerResult';
+import DEFAULT_OPTIONS from './CompilerAdapterOptions';
+import {
+    PROCESS_SIGINT
+} from './Events';
+import {
+    findFiles,
+    watchFiles
+} from './FsUtil';
+import {
+    invalidError
+} from './CompilerErrorFactory';
 
 /**
  * @private
  * @type {WeakMap}
  */
-const COMPILER_OPTIONS = new WeakMap();
+const OPTIONS = new WeakMap();
 
 /**
  * @private
  * @type {WeakMap}
  */
-const WEBPACK_OPTIONS = new WeakMap();
+const POOL = new WeakMap();
 
 /**
  * @private
  * @type {WeakMap}
  */
-const EVENTS = new WeakMap();
+const WATCHERS = new WeakMap();
+
+/**
+ * @callback CompilerAdapterCallback
+ * @returns {void}
+ */
+const DEFAULT_CALLBACK = () => {};
+
+/**
+ * @private
+ * @type {String}
+ */
+const WORKER_PATH = require.resolve('./CompilerWorker');
 
 /**
  * @class
@@ -27,79 +53,203 @@ const EVENTS = new WeakMap();
 class CompilerAdapter {
     /**
      * @constructor
-     * @param {CompilerOptions} [compilerOptions={}]
-     * @param {WebpackOptions} [webpackOptions={}]
+     * @param {CompilerAdapterOptions} [options]
      */
-    constructor(compilerOptions = {}, webpackOptions = {}) {
-        const events = CompilerStrategyEventsFactory.createEvents(compilerOptions);
+    constructor(options = {}) {
+        OPTIONS.set(this, Object.assign({}, DEFAULT_OPTIONS, options));
 
-        COMPILER_OPTIONS.set(this, compilerOptions);
-        WEBPACK_OPTIONS.set(this, webpackOptions);
-        EVENTS.set(this, events);
+        /* istanbul ignore next */
+        process.on(PROCESS_SIGINT, () => this.closeAll());
     }
 
     /**
-     * Gets current {@link CompilerOptions}
-     * @readonly
-     * @type {CompilerOptions}
+     * @returns {CompilerAdapterOptions}
      */
-    get compilerOptions() {
-        return COMPILER_OPTIONS.get(this);
-    }
-
-    /**
-     * Gets current {@link WebpackOptions}
-     * @readonly
-     * @type {WebpackOptions}
-     */
-    get webpackOptions() {
-        return WEBPACK_OPTIONS.get(this);
+    get options() {
+        return OPTIONS.get(this);
     }
 
     /**
      * @private
-     * @readonly
-     * @type {Object<String,Function>}
+     * @returns {CompilerFailureOptions}
      */
-    get events() {
-        return EVENTS.get(this);
+    get failures() {
+        let options = this.options.failures;
+
+        if (isBoolean(options)) {
+            options = {
+                sysErrors: options,
+                warnings: options,
+                errors: options
+            };
+        }
+
+        const { sysErrors, warnings, errors } = options;
+
+        return {
+            sysErrors,
+            warnings,
+            errors
+        };
     }
 
     /**
      * @private
-     * @param {CompilerStrategy} strategy
-     * @param {String|String[]} patterns
-     * @param {Function} [callback]
-     * @returns {Promise}
+     * @returns {PromisePool}
      */
-    execute(strategy, patterns, callback) {
-        const invoker = new CompilerStrategyInvoker(strategy, this.events);
+    get pool() {
+        if (!POOL.has(this)) {
+            POOL.set(this, new PromisePool(this.options.concurrency));
+        }
 
-        return invoker.invoke(patterns, callback);
+        return POOL.get(this);
     }
 
     /**
-     * Builds the bundle(s)
-     * @param {String|String[]} patterns
-     * @param {Function} [callback]
-     * @returns {Promise}
+     * @private
+     * @returns {Set<FSWatcher>}
      */
-    run(patterns, callback) {
-        const strategy = new ClusterRunStrategy(this.compilerOptions, this.webpackOptions);
+    get watchers() {
+        if (!WATCHERS.has(this)) {
+            WATCHERS.set(this, new Set([]));
+        }
 
-        return this.execute(strategy, patterns, callback);
+        return WATCHERS.get(this);
     }
 
     /**
-     * Builds the bundle(s) then starts the watcher, which rebuilds bundles whenever their source files change
-     * @param {String|String[]} patterns
-     * @param {Function} [callback]
+     * @internal
+     * @return {Promise}
+     */
+    closeAll() {
+        return this.closePool()
+            .then(() => this.closeWatchers())
+            .then(() => CompilerAdapter.closeMaster());
+    }
+
+    /**
+     * @private
+     * @return {Promise}
+     */
+    closePool() {
+        return this.pool.closeAll().then(() => {
+            this.pool.clear();
+        });
+    }
+
+    /**
+     * @private
+     * @return {Promise}
+     */
+    closeWatchers() {
+        const promises = Array.from(this.watchers.values()).map(watcher => {
+            watcher.close();
+
+            return Promise.resolve();
+        });
+
+        return Promise.all(promises).then(() => {
+            this.watchers.clear();
+        });
+    }
+
+    /**
+     * @private
+     * @param {Object} options
+     * @param {CompilerAdapterCallback} [callback]
      * @returns {Promise}
      */
-    watch(patterns, callback) {
-        const strategy = new ClusterWatchStrategy(this.compilerOptions, this.webpackOptions);
+    fork(options, callback) {
+        return ForkPromise.fork(Object.assign({}, this.options, options), callback);
+    }
 
-        return this.execute(strategy, patterns, callback);
+    /**
+     * @private
+     * @param {Object} data
+     * @returns {Promise<String|Error>}
+     */
+    done(data) {
+        const result = CompilerResult.from(data),
+            failures = this.failures,
+            hasError = (failures.sysErrors && result.hasSysErrors) ||
+                (failures.errors && result.hasErrors) ||
+                (failures.warnings && result.hasWarnings);
+
+        return Promise.resolve(hasError ? invalidError(result.filename) : result.filename);
+    }
+
+    /**
+     * Builds the bundles
+     * @param {String[]} patterns
+     * @param {CompilerAdapterCallback} [callback]
+     * @returns {Promise<String[]|Error[]>}
+     */
+    run(patterns, callback = DEFAULT_CALLBACK) {
+        return CompilerAdapter.setupMaster().then(() => {
+            return findFiles(patterns).then(files => {
+                files.forEach(filename => {
+                    this.pool.set(filename, () => this.fork({
+                        filename,
+                        watch: false
+                    }, callback));
+                });
+
+                return this.pool.waitAll().then(results => {
+                    return Promise.all(results.map(result => this.done(result)));
+                });
+            });
+        }).then(results => this.closeAll().then(() => {
+            const errors = results.filter(isError);
+
+            return errors.length > 0 ? Promise.reject(errors) : Promise.resolve(results);
+        }));
+    }
+
+    /**
+     * Builds the bundles then starts the watcher, which rebuilds bundles whenever their source files change
+     * @param {String[]} patterns
+     * @param {CompilerAdapterCallback} [callback]
+     * @returns {Promise}
+     */
+    watch(patterns, callback = DEFAULT_CALLBACK) {
+        return CompilerAdapter.setupMaster().then(() => {
+            return watchFiles(patterns, filename => {
+                Promise.resolve().then(() => {
+                    return this.pool.has(filename) ? this.pool.stop(filename) : Promise.resolve();
+                }).then(() => {
+                    this.pool.set(filename, () => this.fork({
+                        filename,
+                        watch: true
+                    }, callback));
+
+                    return this.pool.start(filename);
+                });
+            }).then(watchers => {
+                watchers.forEach(watcher => this.watchers.add(watcher));
+
+                return Promise.resolve([]);
+            });
+        });
+    }
+
+    /**
+     * @private
+     * @static
+     * @returns {Promise}
+     */
+    static setupMaster() {
+        return ForkPromise.setupMaster({
+            exec: WORKER_PATH
+        });
+    }
+
+    /**
+     * @private
+     * @static
+     * @returns {Promise}
+     */
+    static closeMaster() {
+        return ForkPromise.closeMaster();
     }
 }
 

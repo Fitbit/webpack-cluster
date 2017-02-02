@@ -29,5 +29,6 @@ script:
   - npm run clean
   - npm run eslint
   - npm run cover
+  - npm run test-cli
 after_script:
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && .travis/after-all.sh || false'

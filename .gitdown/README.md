@@ -27,7 +27,7 @@ yarn add webpack-config {"gitdown": "gitinfo", "name": "name"} --dev
 
 `cli`
 
-```
+```bash
 {"gitdown": "include", "file": "cli.txt"}
 ```
 

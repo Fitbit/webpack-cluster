@@ -7,19 +7,20 @@
     }
   },
   "presets": [
-    "es2015"
+    "latest"
   ],
   "plugins": [
     ["babel-plugin-transform-builtin-extend", {
       "globals": [
-        "Error"
+        "Error",
+        "Promise"
       ]
     }],
     "add-module-exports",
     "transform-runtime"
   ],
-  "ignore": [
-    "node_modules/",
-    "**/wallaby/wallaby/**"
+  "only": [
+    "src/",
+    "test/"
   ]
 }

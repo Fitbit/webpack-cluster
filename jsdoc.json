@@ -1,7 +1,4 @@
 {
-  "source": {
-    "exclude": ["src/bin"]
-  },
   "opts": {
     "destination": "docs",
     "recurse": true,
