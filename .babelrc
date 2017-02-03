@@ -21,6 +21,7 @@
   ],
   "only": [
     "src/",
-    "test/"
+    "test/",
+    "jasmine.js"
   ]
 }
