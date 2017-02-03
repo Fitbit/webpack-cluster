@@ -1,4 +1,4 @@
-import EventEmitter from 'Events';
+import EventEmitter from 'events';
 import {
     FORK_SEND
 } from './Events';
