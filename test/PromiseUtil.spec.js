@@ -59,13 +59,13 @@ describe('PromiseUtil', () => {
     });
 
     describe('#delay()', () => {
-        it('should be resolved after 10 ms', done => {
+        it('should resolve `Promise` after 10 ms', done => {
             delay(10).then(() => done());
         });
     });
 
     describe('#catchReturn()', () => {
-        it('should make rejected `Promise` as resolved', done => {
+        it('should convert rejected `Promise` to resolved', done => {
             const err = new Error(1),
                 promise = Promise.reject(err);
 
