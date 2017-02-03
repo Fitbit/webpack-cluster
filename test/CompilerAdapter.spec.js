@@ -28,7 +28,6 @@ describe('CompilerAdapter', () => {
         it('should not run successfully', done => {
             const adapter = new CompilerAdapter({
                 dryRun: true,
-                silent: false,
                 failures: false
             });
 
@@ -44,7 +43,6 @@ describe('CompilerAdapter', () => {
         it('should not run successfully', done => {
             const adapter = new CompilerAdapter({
                 dryRun: true,
-                silent: false,
                 failures: true
             });
 
@@ -59,10 +57,6 @@ describe('CompilerAdapter', () => {
     });
 
     describe('#watch()', () => {
-        beforeAll(done => copy('./test/fixtures', './test/tmp', done));
-
-        afterAll(done => remove('./test/tmp', done));
-
         function updateFile(filename) {
             return delay(100).then(() => {
                 return new Promise(resolve => {
@@ -71,10 +65,14 @@ describe('CompilerAdapter', () => {
             });
         }
 
+        beforeAll(done => copy('./test/fixtures', './test/tmp', done));
+
+        afterAll(done => remove('./test/tmp', done));
+
         it('should watch successfully', done => {
             const adapter = new CompilerAdapter({
                 dryRun: true,
-                silent: false
+                failures: false
             });
 
             adapter.watch([
