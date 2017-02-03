@@ -1,4 +1,4 @@
-import EventEmitter from 'Events';
+import EventEmitter from 'events';
 import ForkMock from './ForkMock';
 import {
     CLUSTER_INTERNAL_MESSAGE,
