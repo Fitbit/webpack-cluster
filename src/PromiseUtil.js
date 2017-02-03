@@ -12,6 +12,7 @@ import {
  */
 
 /**
+ * @internal
  * @param {*} promise
  * @returns {Boolean}
  */
@@ -20,6 +21,7 @@ export function isPromise(promise) {
 }
 
 /**
+ * @internal
  * @param {Promise|LazyPromise} promise
  * @returns {LazyPromise}
  */
@@ -28,6 +30,7 @@ export function asLazy(promise) {
 }
 
 /**
+ * @internal
  * @param {LazyPromise|Promise} promise
  * @returns {Promise}
  */
@@ -36,6 +39,7 @@ export function toPromise(promise) {
 }
 
 /**
+ * @internal
  * @param {*} promise
  * @returns {Boolean}
  */
@@ -44,6 +48,7 @@ export function isCancelable(promise) {
 }
 
 /**
+ * @internal
  * @param {Number} ms
  * @returns {Promise}
  */
@@ -52,6 +57,7 @@ export function delay(ms) {
 }
 
 /**
+ * @internal
  * @param {LazyPromise|Promise} promise
  * @returns {Promise}
  */
