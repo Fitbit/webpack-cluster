@@ -6,13 +6,11 @@
 [![Dependency Status](https://img.shields.io/david/Fitbit/webpack-cluster.svg?style=flat-square)](https://david-dm.org/Fitbit/webpack-cluster)
 [![Development Dependency Status](https://img.shields.io/david/dev/Fitbit/webpack-cluster.svg?style=flat-square)](https://david-dm.org/Fitbit/webpack-cluster#info=devDependencies)
 
-<a name="webpack-cluster"></a>
 # webpack-cluster
 > Helps to make parallel webpack compilation easily
 
-![](https://raw.github.com/Fitbit/webpack-cluster/master/.gitdown/cli.gif)
+![](screenshot.gif)
 
-<a name="webpack-cluster-installation"></a>
 ## Installation
 
 ```bash
@@ -25,7 +23,6 @@ or
 yarn add webpack-cluster --dev
 ```
 
-<a name="webpack-cluster-usage"></a>
 ## Usage
 
 CLI
@@ -45,7 +42,6 @@ Options:
 
 Miscellaneous:
   --version  Outputs version number                                    [boolean]
-
 ```
 
 `./gulpfile.js`
@@ -76,5 +72,4 @@ gulp.task('watch', [], callback => {
         callback(new gutil.PluginError('webpack-cluster', err));
     });
 });
-
 ```
