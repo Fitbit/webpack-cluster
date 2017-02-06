@@ -20,14 +20,11 @@ describe('CompilerAdapter', () => {
 
     beforeEach(() => {
         spyOn(mock, 'callback').and.callFake(() => {});
+        spyOn(console, 'log').and.callFake(() => {});
+        spyOn(process.stdout, 'write').and.callFake(() => {});
     });
 
     describe('#run()', () => {
-        beforeEach(() => {
-            spyOn(console, 'log').and.callFake(() => {});
-            spyOn(process.stdout, 'write').and.callFake(() => {});
-        });
-
         it('should not run successfully', done => {
             const adapter = new CompilerAdapter({
                 dryRun: true,
@@ -83,29 +80,19 @@ describe('CompilerAdapter', () => {
             ], () => {
                 mock.callback();
 
-                console.log('callback called', mock.callback.calls.count());
-
                 if (mock.callback.calls.count() >= 10) {
                     adapter.closeAll().then(() => {
-                        console.log('closed successfully');
-
                         done();
                     });
                 }
             }).then(() => {
-                console.log('watch started successfully');
-
                 return findFiles([
                     './test/tmp/config-*.js'
                 ]).then(files => {
                     const updateFiles = () => files.map(filename => updateFile(filename));
 
                     return Promise.all(updateFiles()).then(() => {
-                        console.log('files were updated successfully (1)');
-
-                        return Promise.all(updateFiles()).then(() => {
-                            console.log('files were updated successfully (2)');
-                        });
+                        return delay(500).then(() => Promise.all(updateFiles()));
                     });
                 });
             });
