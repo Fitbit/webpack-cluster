@@ -14,20 +14,20 @@
 ## Installation
 
 ```bash
-npm install webpack-config {"gitdown": "gitinfo", "name": "name"} --save-dev
+npm install {"gitdown": "gitinfo", "name": "name"} --save-dev
 ```
 
 or
 
 ```bash
-yarn add webpack-config {"gitdown": "gitinfo", "name": "name"} --dev
+yarn add {"gitdown": "gitinfo", "name": "name"} --dev
 ```
 
 ## Usage
 
-`cli`
+CLI
 
-```bash
+```text
 {"gitdown": "include", "file": "cli.txt"}
 ```
 

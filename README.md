@@ -16,40 +16,35 @@
 ## Installation
 
 ```bash
-npm install webpack-config webpack-cluster --save-dev
+npm install webpack-cluster --save-dev
 ```
 
 or
 
 ```bash
-yarn add webpack-config webpack-cluster --dev
+yarn add webpack-cluster --dev
 ```
 
 <a name="webpack-cluster-usage"></a>
 ## Usage
 
-`cli`
+CLI
 
-```
+```text
 $ webpack-cluster --config=**/webpack.config.js [options]
 
-Compiler:
-  --config      Specifies configuration files using `minimatch` pattern
-                                                             [string] [required]
-  --progress    Displays compilation progress                          [boolean]
-  --json        Saves `stats` object to JSON file                      [boolean]
-  --silent      Suppress all output                                    [boolean]
-  --watch       Runs webpack compiler in `watch` mode                  [boolean]
-  --memoryFs    Compiles to memory                                     [boolean]
-  --maxWorkers  Number of concurrent workers
-                                 [number] [default: require('os').cpus().length]
-
-Webpack:
-  --profile  Captures timing information for each module               [boolean]
-  --[*]      Many configuration options are mapped from CLI automatically
+Options:
+  --config       Specifies configuration files using `glob` pattern
+                                                              [array] [required]
+  --failures     Sets failure options                            [default: true]
+  --watch        Enables `watch` mode                                  [boolean]
+  --dryRun       Enables `dryRun` mode                                 [boolean]
+  --concurrency  Sets maximum number of concurrent compilers
+                                                           [number] [default: 8]
+  --silent       Suppress all output                                   [boolean]
 
 Miscellaneous:
-  --version  Outputs the version number                                [boolean]
+  --version  Outputs version number                                    [boolean]
 
 ```
 
@@ -60,42 +55,25 @@ import gulp from 'gulp';
 import gutil from 'gulp-util';
 import WebpackCluster from 'webpack-cluster';
 
-const WEBPACK_OPTIONS = {
-        output: {
-            path: './dist'
-        },
-        stats: {
-            colors: true,
-            hash: true,
-            timings: true,
-            chunks: false,
-            chunkModules: false,
-            modules: false,
-            children: true,
-            version: false,
-            cached: false,
-            cachedAssets: false,
-            reasons: false,
-            source: false,
-            errorDetails: false
-        }
-    },
-    COMPILER_OPTIONS = {
-        progress: false,
-        json: false,
-        memoryFs: false
-    },
-    webpack = new WebpackCluster(COMPILER_OPTIONS, WEBPACK_OPTIONS);
+const webpackCluster = new WebpackCluster({
+    dryRun: false,
+    concurrency: 10,
+    failures: {
+        sysErrors: true,
+        errors: true,
+        warnings: true
+    }
+});
 
 gulp.task('run', [], callback => {
-    webpack.run('./src/**/webpack.config.js').then(callback).catch(err => {
-        callback(new gutil.PluginError('webpack', err));
+    webpackCluster.run('./src/**/webpack.config.js').then(callback).catch(err => {
+        callback(new gutil.PluginError('webpack-cluster', err));
     });
 });
 
 gulp.task('watch', [], callback => {
-    webpack.watch('./src/**/webpack.config.js').then(callback).catch(err => {
-        callback(new gutil.PluginError('webpack', err));
+    webpackCluster.watch('./src/**/webpack.config.js').then(callback).catch(err => {
+        callback(new gutil.PluginError('webpack-cluster', err));
     });
 });
 

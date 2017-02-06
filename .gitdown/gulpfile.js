@@ -2,7 +2,7 @@ import gulp from 'gulp';
 import gutil from 'gulp-util';
 import WebpackCluster from 'webpack-cluster';
 
-const webpack = new WebpackCluster({
+const webpackCluster = new WebpackCluster({
     dryRun: false,
     concurrency: 10,
     failures: {
@@ -13,13 +13,13 @@ const webpack = new WebpackCluster({
 });
 
 gulp.task('run', [], callback => {
-    webpack.run('./src/**/webpack.config.js').then(callback).catch(err => {
-        callback(new gutil.PluginError('webpack', err));
+    webpackCluster.run('./src/**/webpack.config.js').then(callback).catch(err => {
+        callback(new gutil.PluginError('webpack-cluster', err));
     });
 });
 
 gulp.task('watch', [], callback => {
-    webpack.watch('./src/**/webpack.config.js').then(callback).catch(err => {
-        callback(new gutil.PluginError('webpack', err));
+    webpackCluster.watch('./src/**/webpack.config.js').then(callback).catch(err => {
+        callback(new gutil.PluginError('webpack-cluster', err));
     });
 });
