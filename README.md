@@ -8,6 +8,8 @@
 
 <a name="webpack-cluster"></a>
 # webpack-cluster
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/Fitbit/webpack-cluster.svg)](https://greenkeeper.io/)
 > Helps to make parallel webpack compilation easily
 
 ![](https://raw.github.com/Fitbit/webpack-cluster/master/.gitdown/cli.gif)
