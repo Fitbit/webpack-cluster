@@ -31,7 +31,7 @@ class CompilerError extends Error {
 
     /**
      * @readonly
-     * @returns {String}
+     * @type {String}
      */
     get filename() {
         return FILENAME.get(this);
@@ -39,7 +39,7 @@ class CompilerError extends Error {
 
     /**
      * @readonly
-     * @returns {Number}
+     * @type {Number}
      */
     get code() {
         return CODE.get(this);

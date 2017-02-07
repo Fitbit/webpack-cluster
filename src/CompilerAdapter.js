@@ -63,15 +63,17 @@ class CompilerAdapter {
     }
 
     /**
-     * @returns {CompilerAdapterOptions}
+     * @readonly
+     * @type {CompilerAdapterOptions}
      */
     get options() {
         return OPTIONS.get(this);
     }
 
     /**
+     * @readonly
      * @private
-     * @returns {CompilerFailureOptions}
+     * @type {CompilerFailureOptions}
      */
     get failures() {
         let options = this.options.failures;
@@ -95,7 +97,8 @@ class CompilerAdapter {
 
     /**
      * @private
-     * @returns {PromisePool}
+     * @readonly
+     * @type {PromisePool}
      */
     get pool() {
         if (!POOL.has(this)) {
@@ -107,7 +110,8 @@ class CompilerAdapter {
 
     /**
      * @private
-     * @returns {Set<FSWatcher>}
+     * @readonly
+     * @type {Set<FSWatcher>}
      */
     get watchers() {
         if (!WATCHERS.has(this)) {
@@ -119,7 +123,7 @@ class CompilerAdapter {
 
     /**
      * @internal
-     * @return {Promise}
+     * @returns {Promise}
      */
     closeAll() {
         return this.closePool()
@@ -129,7 +133,7 @@ class CompilerAdapter {
 
     /**
      * @private
-     * @return {Promise}
+     * @returns {Promise}
      */
     closePool() {
         return this.pool.closeAll().then(() => {
@@ -139,7 +143,7 @@ class CompilerAdapter {
 
     /**
      * @private
-     * @return {Promise}
+     * @returns {Promise}
      */
     closeWatchers() {
         const promises = Array.from(this.watchers.values()).map(watcher => {

@@ -36,7 +36,7 @@ class ForkPromise extends Promise {
     /**
      * @param {Function} [onFulfilled]
      * @param {Function} [onRejected]
-     * @return {ForkPromise}
+     * @returns {ForkPromise}
      */
     then(onFulfilled, onRejected) {
         return super.then(onFulfilled, onRejected);

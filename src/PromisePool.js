@@ -71,7 +71,7 @@ class PromisePool extends Map {
     /**
      * @param {*} key
      * @param {Promise|LazyPromise} value
-     * @return {PromisePool}
+     * @returns {PromisePool}
      */
     set(key, value) {
         return super.set(key, asLazy(value));
