@@ -1,10 +1,10 @@
-[![NPM version](http://img.shields.io/npm/v/webpack-cluster.svg?style=flat-square)](https://www.npmjs.org/package/webpack-cluster)
-[![Travis build status](http://img.shields.io/travis/Fitbit/webpack-cluster/master.svg?style=flat-square)](https://travis-ci.org/Fitbit/webpack-cluster)
-[![AppVeyor build status](https://img.shields.io/appveyor/ci/mdreizin/webpack-cluster/master.svg?style=flat-square)](https://ci.appveyor.com/project/mdreizin/webpack-cluster/branch/master)
-[![Code Climate GPA](https://img.shields.io/codeclimate/github/Fitbit/webpack-cluster.svg?style=flat-square)](https://codeclimate.com/github/Fitbit/webpack-cluster)
-[![Code Climate Coverage](https://img.shields.io/codeclimate/coverage/github/Fitbit/webpack-cluster.svg?style=flat-square)](https://codeclimate.com/github/Fitbit/webpack-cluster)
-[![Dependency Status](https://img.shields.io/david/Fitbit/webpack-cluster.svg?style=flat-square)](https://david-dm.org/Fitbit/webpack-cluster)
-[![Development Dependency Status](https://img.shields.io/david/dev/Fitbit/webpack-cluster.svg?style=flat-square)](https://david-dm.org/Fitbit/webpack-cluster#info=devDependencies)
+[![NPM version](http://img.shields.io/npm/v/webpack-cluster.svg)](https://www.npmjs.org/package/webpack-cluster)
+[![Travis build status](http://img.shields.io/travis/Fitbit/webpack-cluster/master.svg)](https://travis-ci.org/Fitbit/webpack-cluster)
+[![AppVeyor build status](https://img.shields.io/appveyor/ci/mdreizin/webpack-cluster/master.svg)](https://ci.appveyor.com/project/mdreizin/webpack-cluster/branch/master)
+[![Code Climate GPA](https://img.shields.io/codeclimate/github/Fitbit/webpack-cluster.svg)](https://codeclimate.com/github/Fitbit/webpack-cluster)
+[![Code Climate Coverage](https://img.shields.io/codeclimate/coverage/github/Fitbit/webpack-cluster.svg)](https://codeclimate.com/github/Fitbit/webpack-cluster)
+[![Dependency Status](https://img.shields.io/david/Fitbit/webpack-cluster.svg)](https://david-dm.org/Fitbit/webpack-cluster)
+[![Development Dependency Status](https://img.shields.io/david/dev/Fitbit/webpack-cluster.svg)](https://david-dm.org/Fitbit/webpack-cluster#info=devDependencies)
 
 # webpack-cluster
 > Helps to make parallel webpack compilation easily
