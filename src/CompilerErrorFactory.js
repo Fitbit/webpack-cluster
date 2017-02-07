@@ -15,11 +15,7 @@ import CompilerError from './CompilerError';
  * @returns {Error}
  */
 function createError(key, code) {
-    const err = new CompilerError(key);
-
-    err.code = code;
-
-    return err;
+    return new CompilerError(key, code);
 }
 
 /**
