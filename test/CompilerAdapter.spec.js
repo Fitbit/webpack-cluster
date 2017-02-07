@@ -2,6 +2,9 @@ import {
     appendFile
 } from 'fs';
 import {
+    isString
+} from 'lodash';
+import {
     copy,
     remove
 } from 'fs-extra';
@@ -12,6 +15,7 @@ import {
     findFiles
 } from '../src/FsUtil';
 import CompilerAdapter from '../src/CompilerAdapter';
+import CompilerError from '../src/CompilerError';
 
 describe('CompilerAdapter', () => {
     const mock = {
@@ -21,20 +25,22 @@ describe('CompilerAdapter', () => {
     beforeEach(() => {
         spyOn(mock, 'callback').and.callFake(() => {});
         spyOn(console, 'log').and.callFake(() => {});
-        spyOn(process.stdout, 'write').and.callFake(() => {});
     });
 
     describe('#run()', () => {
-        it('should not run successfully', done => {
+        it('should run successfully', done => {
             const adapter = new CompilerAdapter({
                 dryRun: true,
-                failures: false
+                failures: false,
+                silent: true
             });
 
             adapter.run([
                 './test/fixtures/config-*.js'
-            ], mock.callback).then(() => {
+            ], mock.callback).then(results => {
                 expect(mock.callback.calls.count()).toEqual(5);
+                expect(results.length).toEqual(5);
+                expect(results.every(isString)).toBeTruthy();
 
                 done();
             });
@@ -43,13 +49,32 @@ describe('CompilerAdapter', () => {
         it('should not run successfully', done => {
             const adapter = new CompilerAdapter({
                 dryRun: true,
-                failures: true
+                failures: true,
+                silent: true
             });
 
             adapter.run([
                 './test/fixtures/config-*.js'
-            ], mock.callback).catch(() => {
+            ], mock.callback).catch(results => {
                 expect(mock.callback.calls.count()).toEqual(5);
+                expect(results.length).toEqual(3);
+                expect(results.every(x => x instanceof CompilerError)).toBeTruthy();
+
+                done();
+            });
+        });
+
+        it('should not be silent', done => {
+            const adapter = new CompilerAdapter({
+                dryRun: true,
+                failures: false,
+                silent: false
+            });
+
+            adapter.run([
+                './test/fixtures/config-*.js'
+            ], mock.callback).then(() => {
+                expect(console.log.calls.count()).toEqual(5);
 
                 done();
             });
@@ -72,7 +97,8 @@ describe('CompilerAdapter', () => {
         it('should watch successfully', done => {
             const adapter = new CompilerAdapter({
                 dryRun: true,
-                failures: false
+                failures: false,
+                silent: true
             });
 
             adapter.watch([
