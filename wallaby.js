@@ -1,13 +1,13 @@
 export default wallaby => {
     return {
         files: [
-            'src/**/*.js',
-            'test/helpers/**/*.js',
-            'test/fixtures/**/*.js',
-            'test/fixtures/**/*.html'
+            'package.json',
+            'src/*.js',
+            'test/**/*.js',
+            '!test/**/*.spec.js'
         ],
         tests: [
-            'test/**/*.spec.js'
+            'test/*.spec.js'
         ],
         testFramework: 'jasmine',
         env: {
@@ -21,8 +21,11 @@ export default wallaby => {
         workers: {
             recycle: true
         },
-        bootstrap: () => {
-            require('./test/helpers/clusterMock');
+        hints: {
+            ignoreCoverage: /istanbul ignore next/
+        },
+        setup: () => {
+            require('./test/helpers/СlusterModule');
         }
     };
 };
