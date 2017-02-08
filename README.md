@@ -7,6 +7,8 @@
 [![Development Dependency Status](https://img.shields.io/david/dev/Fitbit/webpack-cluster.svg)](https://david-dm.org/Fitbit/webpack-cluster#info=devDependencies)
 
 # webpack-cluster
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/Fitbit/webpack-cluster.svg)](https://greenkeeper.io/)
 > Helps to make parallel webpack compilation easily
 
 ![](screenshot.gif)
