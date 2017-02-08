@@ -44,6 +44,31 @@ Miscellaneous:
   --version  Outputs version number                                    [boolean]
 ```
 
+Node API
+
+<!-- eslint no-console: "allow" -->
+```javascript
+import WebpackCluster from 'webpack-cluster';
+
+const webpackCluster = new WebpackCluster({
+    dryRun: false,
+    concurrency: 10,
+    failures: {
+        sysErrors: true,
+        errors: true,
+        warnings: true
+    }
+});
+
+webpackCluster.run([
+    './src/**/webpack.config.js'
+]).then(results => { // In case of success
+    console.log(results); // ['./src/app1/webpack.config.js', './src/app2/webpack.config.js']
+}).catch(results => { // In case of any errors
+    console.log(results); // [Error { filename: './src/app3/webpack.config.js', code: 2 }]
+});
+```
+
 `./gulpfile.js`
 
 ```javascript
@@ -62,13 +87,17 @@ const webpackCluster = new WebpackCluster({
 });
 
 gulp.task('run', [], callback => {
-    webpackCluster.run('./src/**/webpack.config.js').then(callback).catch(err => {
+    webpackCluster.run([
+        './src/**/webpack.config.js'
+    ]).then(callback).catch(err => {
         callback(new gutil.PluginError('webpack-cluster', err));
     });
 });
 
 gulp.task('watch', [], callback => {
-    webpackCluster.watch('./src/**/webpack.config.js').then(callback).catch(err => {
+    webpackCluster.watch([
+        './src/**/webpack.config.js'
+    ]).then(callback).catch(err => {
         callback(new gutil.PluginError('webpack-cluster', err));
     });
 });
