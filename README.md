@@ -1,56 +1,47 @@
-[![NPM version](http://img.shields.io/npm/v/webpack-cluster.svg?style=flat-square)](https://www.npmjs.org/package/webpack-cluster)
-[![Travis build status](http://img.shields.io/travis/Fitbit/webpack-cluster/master.svg?style=flat-square)](https://travis-ci.org/Fitbit/webpack-cluster)
-[![AppVeyor build status](https://img.shields.io/appveyor/ci/mdreizin/webpack-cluster/master.svg?style=flat-square)](https://ci.appveyor.com/project/mdreizin/webpack-cluster/branch/master)
-[![Code Climate GPA](https://img.shields.io/codeclimate/github/Fitbit/webpack-cluster.svg?style=flat-square)](https://codeclimate.com/github/Fitbit/webpack-cluster)
-[![Code Climate Coverage](https://img.shields.io/codeclimate/coverage/github/Fitbit/webpack-cluster.svg?style=flat-square)](https://codeclimate.com/github/Fitbit/webpack-cluster)
-[![Dependency Status](https://img.shields.io/david/Fitbit/webpack-cluster.svg?style=flat-square)](https://david-dm.org/Fitbit/webpack-cluster)
-[![Development Dependency Status](https://img.shields.io/david/dev/Fitbit/webpack-cluster.svg?style=flat-square)](https://david-dm.org/Fitbit/webpack-cluster#info=devDependencies)
+[![NPM version](http://img.shields.io/npm/v/webpack-cluster.svg)](https://www.npmjs.org/package/webpack-cluster)
+[![Travis build status](http://img.shields.io/travis/Fitbit/webpack-cluster/master.svg)](https://travis-ci.org/Fitbit/webpack-cluster)
+[![AppVeyor build status](https://img.shields.io/appveyor/ci/mdreizin/webpack-cluster/master.svg?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjAgMGMxMSAwIDIwIDkgMjAgMjBzLTkgMjAtMjAgMjBTMCAzMSAwIDIwIDkgMCAyMCAwem00LjkgMjMuOWMyLjItMi44IDEuOS02LjgtLjktOC45LTIuNy0yLjEtNi43LTEuNi05IDEuMi0yLjIgMi44LTEuOSA2LjguOSA4LjkgMi44IDIuMSA2LjggMS42IDktMS4yem0tMTAuNyAxM2MxLjIuNSAzLjggMSA1LjEgMUwyOCAyNS4zYzIuOC00LjIgMi4xLTkuOS0xLjgtMTMtMy41LTIuOC04LjQtMi43LTExLjkgMEwyLjIgMjEuNmMuMyAzLjIgMS4yIDQuOCAxLjIgNC45bDYuOS03LjVjLS41IDMuMy43IDYuNyAzLjUgOC44IDIuNCAxLjkgNS4zIDIuNCA4LjEgMS44bC03LjcgNy4zeiIgZmlsbD0iI0NDQyIgZmlsbC1ydWxlPSJub256ZXJvIi8%2BPC9zdmc%2B)](https://ci.appveyor.com/project/mdreizin/webpack-cluster/branch/master)
+[![Code Climate GPA](https://img.shields.io/codeclimate/github/Fitbit/webpack-cluster.svg)](https://codeclimate.com/github/Fitbit/webpack-cluster)
+[![Code Climate Coverage](https://img.shields.io/codeclimate/coverage/github/Fitbit/webpack-cluster.svg)](https://codeclimate.com/github/Fitbit/webpack-cluster)
+[![Dependency Status](https://img.shields.io/david/Fitbit/webpack-cluster.svg)](https://david-dm.org/Fitbit/webpack-cluster)
+[![Development Dependency Status](https://img.shields.io/david/dev/Fitbit/webpack-cluster.svg)](https://david-dm.org/Fitbit/webpack-cluster#info=devDependencies)
 
-<a name="webpack-cluster"></a>
 # webpack-cluster
 > Helps to make parallel webpack compilation easily
 
-![](https://raw.github.com/Fitbit/webpack-cluster/master/.gitdown/cli.gif)
+![](screenshot.gif)
 
-<a name="webpack-cluster-installation"></a>
 ## Installation
 
 ```bash
-npm install webpack-config webpack-cluster --save-dev
+npm install webpack-cluster --save-dev
 ```
 
 or
 
 ```bash
-yarn add webpack-config webpack-cluster --dev
+yarn add webpack-cluster --dev
 ```
 
-<a name="webpack-cluster-usage"></a>
 ## Usage
 
-`cli`
+CLI
 
-```
+```text
 $ webpack-cluster --config=**/webpack.config.js [options]
 
-Compiler:
-  --config      Specifies configuration files using `minimatch` pattern
-                                                             [string] [required]
-  --progress    Displays compilation progress                          [boolean]
-  --json        Saves `stats` object to JSON file                      [boolean]
-  --silent      Suppress all output                                    [boolean]
-  --watch       Runs webpack compiler in `watch` mode                  [boolean]
-  --memoryFs    Compiles to memory                                     [boolean]
-  --maxWorkers  Number of concurrent workers
-                                 [number] [default: require('os').cpus().length]
-
-Webpack:
-  --profile  Captures timing information for each module               [boolean]
-  --[*]      Many configuration options are mapped from CLI automatically
+Options:
+  --config       Specifies configuration files using `glob` pattern
+                                                              [array] [required]
+  --failures     Sets failure options                            [default: true]
+  --watch        Enables `watch` mode                                  [boolean]
+  --dryRun       Enables `dryRun` mode                                 [boolean]
+  --concurrency  Sets maximum number of concurrent compilers
+                                                           [number] [default: 8]
+  --silent       Suppress all output                                   [boolean]
 
 Miscellaneous:
-  --version  Outputs the version number                                [boolean]
-
+  --version  Outputs version number                                    [boolean]
 ```
 
 `./gulpfile.js`
@@ -60,43 +51,25 @@ import gulp from 'gulp';
 import gutil from 'gulp-util';
 import WebpackCluster from 'webpack-cluster';
 
-const WEBPACK_OPTIONS = {
-        output: {
-            path: './dist'
-        },
-        stats: {
-            colors: true,
-            hash: true,
-            timings: true,
-            chunks: false,
-            chunkModules: false,
-            modules: false,
-            children: true,
-            version: false,
-            cached: false,
-            cachedAssets: false,
-            reasons: false,
-            source: false,
-            errorDetails: false
-        }
-    },
-    COMPILER_OPTIONS = {
-        progress: false,
-        json: false,
-        memoryFs: false
-    },
-    webpack = new WebpackCluster(COMPILER_OPTIONS, WEBPACK_OPTIONS);
+const webpackCluster = new WebpackCluster({
+    dryRun: false,
+    concurrency: 10,
+    failures: {
+        sysErrors: true,
+        errors: true,
+        warnings: true
+    }
+});
 
 gulp.task('run', [], callback => {
-    webpack.run('./src/**/webpack.config.js').then(callback).catch(err => {
-        callback(new gutil.PluginError('webpack', err));
+    webpackCluster.run('./src/**/webpack.config.js').then(callback).catch(err => {
+        callback(new gutil.PluginError('webpack-cluster', err));
     });
 });
 
 gulp.task('watch', [], callback => {
-    webpack.watch('./src/**/webpack.config.js').then(callback).catch(err => {
-        callback(new gutil.PluginError('webpack', err));
+    webpackCluster.watch('./src/**/webpack.config.js').then(callback).catch(err => {
+        callback(new gutil.PluginError('webpack-cluster', err));
     });
 });
-
 ```
