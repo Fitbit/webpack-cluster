@@ -47,7 +47,7 @@ Miscellaneous:
 
 Node API
 
-<!-- eslint no-console: "allow" -->
+<!-- eslint no-console: 0 -->
 ```javascript
 import WebpackCluster from 'webpack-cluster';
 
