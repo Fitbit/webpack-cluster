@@ -81,7 +81,6 @@
     "jsdoc": "^3.4.3",
     "nyc": "^10.1.2",
     "semantic-release": "^6.3.2",
-    "travis-after-all": "^1.4.4",
     "webpack": "1.14.0"
   }
 }
