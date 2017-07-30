@@ -1,32 +1,38 @@
 sudo: false
 language: node_js
 node_js:
+  - 8
+  - 7
   - 6
   - 5
-  - 4
-matrix:
-  fast_finish: true
 os:
   - linux
   - osx
 cache:
   directories:
     - node_modules
+    - $HOME/.yarn-cache
 notifications:
   email: false
 branches:
   only:
     - master
-    - /^greenkeeper.*$/
+    - /^greenkeeper/.*$/
   except:
     - gh-pages
-before_install:
-  - git config --global user.name "$GH_USER_NAME"
-  - git config --global user.email "$GH_USER_EMAIL"
 script:
   - yarn run clean
   - yarn run eslint
   - yarn run cover
-  - yarn run test-cli
-after_script:
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && .travis/after-all.sh || false'
+  - yarn run build
+jobs:
+  fast_finish: true
+  include:
+    - stage: release
+      node_js: 8
+      deploy:
+        skip_cleanup: true
+        provider: script
+        script: yarn run codeclimate && TRAVIS_JOB_NUMBER=WORKAROUND.1 yarn run semantic-release
+      on:
+        branch: master

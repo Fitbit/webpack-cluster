@@ -5,7 +5,7 @@ import {
 export default {
     entry: 'index.js',
     resolve: {
-        root: [
+        modules: [
             __dirname
         ]
     },

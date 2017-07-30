@@ -5,7 +5,7 @@ import {
 export default {
     entry: 'index.js',
     resolve: {
-        root: [
+        modules: [
             __dirname
         ]
     },
@@ -13,15 +13,15 @@ export default {
         path: join(__dirname, 'tmp', 'config-with-errors')
     },
     module: {
-        preLoaders: [{
+        rules: [{
             test: /\.js$/,
-            loader: 'eslint-loader'
+            loader: 'eslint-loader',
+            options: {
+                emitError: true,
+                rules: {
+                    quotes: [2, 'double']
+                }
+            }
         }]
-    },
-    eslint: {
-        emitError: true,
-        rules: {
-            quotes: [2, 'double']
-        }
     }
 };
