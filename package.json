@@ -18,7 +18,6 @@
     "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
     "jsdoc": "jsdoc ./src -c ./jsdoc.json",
     "postjsdoc": "cp screenshot.gif ./docs",
-    "gh-pages": "gh-pages -r https://${GH_TOKEN}@github.com/Fitbit/webpack-cluster.git -d docs",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "nyc": {
@@ -75,7 +74,6 @@
     "eslint-plugin-babel": "^4.0.1",
     "eslint-plugin-markdown": "^1.0.0-beta.3",
     "fs-extra": "^2.0.0",
-    "gh-pages": "^0.12.0",
     "jasmine": "^2.5.3",
     "jasmine-spec-reporter": "^3.2.0",
     "jsdoc": "^3.4.3",
