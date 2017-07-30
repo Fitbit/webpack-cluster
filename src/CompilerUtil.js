@@ -29,13 +29,17 @@ export function createCompiler(config, options) {
  * @returns {void}
  */
 export function compileConfig(config, options, callback) {
-    const compiler = createCompiler(config, options);
+    try {
+        const compiler = createCompiler(config, options);
 
-    if (options.watch === true) {
-        const watchOptions = (options.watchOptions || compiler.options.watchOptions) || {};
+        if (options.watch === true) {
+            const watchOptions = (options.watchOptions || compiler.options.watchOptions) || {};
 
-        compiler.watch(watchOptions, (err, stats) => callback(err, stats));
-    } else {
-        compiler.run((err, stats) => callback(err, stats));
+            compiler.watch(watchOptions, (err, stats) => callback(err, stats));
+        } else {
+            compiler.run((err, stats) => callback(err, stats));
+        }
+    } catch(err) {
+        callback(err);
     }
 }

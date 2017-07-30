@@ -9,7 +9,9 @@ import {
 describe('ConfigUtil', () => {
     describe('#createCompiler()', () => {
         it('should create compiler successfully', () => {
-            const compiler = createCompiler({}, {
+            const compiler = createCompiler({
+                entry: 'index.js'
+            }, {
                 dryRun: true
             });
 
@@ -30,6 +32,7 @@ describe('ConfigUtil', () => {
 
         it('should compile successfully', done => {
             compileConfig({
+                entry: 'index.js',
                 output: {
                     path: __dirname
                 }
@@ -55,6 +58,7 @@ describe('ConfigUtil', () => {
 
         it('should watch successfully', done => {
             compileConfig({
+                entry: 'index.js',
                 output: {
                     path: __dirname
                 }

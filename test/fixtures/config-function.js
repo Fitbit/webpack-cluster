@@ -6,7 +6,7 @@ export default () => {
     return {
         entry: 'index.js',
         resolve: {
-            root: [
+            modules: [
                 __dirname
             ]
         },
