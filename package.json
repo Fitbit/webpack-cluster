@@ -79,6 +79,6 @@
     "jsdoc": "^3.5.3",
     "nyc": "^11.1.0",
     "semantic-release": "^6.3.6",
-    "webpack": "3.4.1"
+    "webpack": "^3.4.1"
   }
 }
