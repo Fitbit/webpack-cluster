@@ -30,6 +30,9 @@
     "sourceMap": false,
     "instrument": false
   },
+  "release": {
+    "analyzeCommits": "semantic-release-conventional-commits"
+  },
   "author": "Marat Dreizin <marat.dreizin@gmail.com>",
   "license": "Apache-2.0",
   "repository": {
@@ -79,6 +82,7 @@
     "jsdoc": "^3.5.3",
     "nyc": "^11.1.0",
     "semantic-release": "^6.3.6",
+    "semantic-release-conventional-commits": "^1.1.0",
     "webpack": "^3.4.1"
   }
 }
