@@ -16,7 +16,6 @@
         "Promise"
       ]
     }],
-    "add-module-exports",
     "transform-runtime"
   ],
   "only": [
