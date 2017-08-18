@@ -57,7 +57,7 @@
     "memory-fs": "^0.4.1",
     "throat": "^4.1.0",
     "tildify": "^1.2.0",
-    "yargs": "^8.0.2"
+    "webpack-config": "^7.3.0"
   },
   "peerDependencies": {
     "webpack": "1.x"

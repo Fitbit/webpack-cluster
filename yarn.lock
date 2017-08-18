@@ -1196,6 +1196,10 @@ cliui@^3.2.0:
     strip-ansi "^3.0.1"
     wrap-ansi "^2.0.0"
 
+clone@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.2.tgz#260b7a99ebb1edfe247538175f783243cb19d149"
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
@@ -1279,6 +1283,12 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
 constants-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/constants-browserify/-/constants-browserify-1.0.0.tgz#c20b96d8c617748aaf1c16021760cd27fcb8cb75"
+
+constitute@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/constitute/-/constitute-1.6.2.tgz#ba9f2b33f1510ac4d1ac3ddc8d4ae7ce5a28aa32"
+  dependencies:
+    clone "^1.0.2"
 
 conventional-changelog@0.0.17:
   version "0.0.17"
@@ -3614,6 +3624,10 @@ readdirp@^2.0.0:
     readable-stream "^2.0.2"
     set-immediate-shim "^1.0.1"
 
+recursive-iterator@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/recursive-iterator/-/recursive-iterator-3.3.0.tgz#4e498ce6227d8c42b2e2d496b296bc866c134514"
+
 redent@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/redent/-/redent-1.0.0.tgz#cf916ab1fd5f1f16dfb20822dd6ec7f730c2afde"
@@ -4509,6 +4523,16 @@ watchpack@^1.4.0:
     async "^2.1.2"
     chokidar "^1.7.0"
     graceful-fs "^4.1.2"
+
+webpack-config@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/webpack-config/-/webpack-config-7.3.0.tgz#d752ead1f69b83de15338ecd6c3c476b0af90c56"
+  dependencies:
+    babel-runtime "^6.25.0"
+    constitute "^1.6.2"
+    lodash "^4.17.4"
+    recursive-iterator "^3.3.0"
+    yargs-parser "^7.0.0"
 
 webpack-sources@^1.0.1:
   version "1.0.1"
