@@ -82,6 +82,6 @@
     "nyc": "^11.1.0",
     "semantic-release": "^7.0.2",
     "semantic-release-conventional-commits": "^1.1.0",
-    "webpack": "^3.4.1"
+    "webpack": "^4.1.0"
   }
 }
