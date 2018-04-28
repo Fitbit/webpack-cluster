@@ -6,7 +6,7 @@ import {
     compileConfig
 } from '../src/CompilerUtil';
 
-describe('ConfigUtil', () => {
+describe('CompilerUtil', () => {
     describe('#createCompiler()', () => {
         it('should create compiler successfully', () => {
             const compiler = createCompiler({
@@ -47,7 +47,7 @@ describe('ConfigUtil', () => {
         });
 
         it('should handle compilation errors correctly', done => {
-            compileConfig({}, {
+            compileConfig(null, {
                 dryRun: true
             }, err => {
                 expect(err).toEqual(jasmine.any(Error));
@@ -74,7 +74,7 @@ describe('ConfigUtil', () => {
         });
 
         it('should handle watch errors correctly', done => {
-            compileConfig({}, {
+            compileConfig(null, {
                 watch: true,
                 dryRun: true
             }, err => {
