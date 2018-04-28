@@ -4,6 +4,7 @@ import {
 
 export default () => {
     return {
+        mode: 'development',
         entry: 'index.js',
         resolve: {
             modules: [

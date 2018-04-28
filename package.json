@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "clean": "rm -rf dist coverage docs .nyc_output",
-    "eslint": "eslint --ext js,md ./ --cache",
+    "lint": "eslint --ext js,md ./ --cache",
     "build": "babel src --out-dir dist --source-maps",
     "test": "babel-node jasmine.js",
     "test-cli": "babel-node src/CompilerAdapterCli.js --config=./test/fixtures/config-*.js --dry-run --no-failures",
@@ -17,8 +17,7 @@
     "postcover": "nyc report",
     "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
     "jsdoc": "jsdoc ./src -c ./jsdoc.json",
-    "postjsdoc": "cp screenshot.gif ./docs",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "postjsdoc": "cp screenshot.gif ./docs"
   },
   "nyc": {
     "include": [
@@ -29,9 +28,6 @@
     ],
     "sourceMap": false,
     "instrument": false
-  },
-  "release": {
-    "analyzeCommits": "semantic-release-conventional-commits"
   },
   "author": "Marat Dreizin <marat.dreizin@gmail.com>",
   "license": "Apache-2.0",
@@ -49,39 +45,38 @@
   },
   "homepage": "https://github.com/Fitbit/webpack-cluster",
   "dependencies": {
-    "babel-runtime": "^6.25.0",
-    "chalk": "^2.0.1",
-    "chokidar": "^1.7.0",
+    "babel-runtime": "^6.26.0",
+    "chalk": "^2.4.1",
+    "chokidar": "^2.0.3",
     "glob": "^7.1.2",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.10",
     "memory-fs": "^0.4.1",
     "throat": "^4.1.0",
     "tildify": "^1.2.0",
-    "webpack-config": "^7.3.0"
+    "webpack-config": "^7.5.0"
   },
   "peerDependencies": {
     "webpack": "1.x"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-eslint": "^7.2.3",
-    "babel-plugin-istanbul": "^4.1.4",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.3",
+    "babel-plugin-istanbul": "^4.1.6",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-register": "^6.24.1",
-    "codeclimate-test-reporter": "^0.5.0",
-    "eslint": "^4.3.0",
-    "eslint-loader": "^1.9.0",
-    "eslint-plugin-babel": "^4.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "eslint": "^4.19.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-babel": "^5.1.0",
     "eslint-plugin-markdown": "^1.0.0-beta.6",
-    "fs-extra": "^4.0.0",
-    "jasmine": "^2.7.0",
-    "jasmine-spec-reporter": "^4.1.1",
-    "jsdoc": "^3.5.3",
-    "nyc": "^11.1.0",
-    "semantic-release": "^7.0.2",
-    "semantic-release-conventional-commits": "^1.1.0",
-    "webpack": "^3.4.1"
+    "fs-extra": "^5.0.0",
+    "jasmine": "^3.1.0",
+    "jasmine-spec-reporter": "^4.2.1",
+    "jsdoc": "^3.5.5",
+    "nyc": "^11.7.1",
+    "semantic-release": "^15.1.7",
+    "travis-deploy-once": "^4.4.1",
+    "webpack": "^4.6.0"
   }
 }

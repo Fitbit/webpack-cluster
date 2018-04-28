@@ -3,6 +3,7 @@ import {
 } from 'path';
 
 export default {
+    mode: 'development',
     entry: 'index.js',
     resolve: {
         modules: [
