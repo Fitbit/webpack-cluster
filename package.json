@@ -55,7 +55,7 @@
     "glob": "^7.1.2",
     "lodash": "^4.17.4",
     "memory-fs": "^0.4.1",
-    "throat": "^4.1.0",
+    "throat": "^5.0.0",
     "tildify": "^1.2.0",
     "webpack-config": "^7.3.0"
   },
